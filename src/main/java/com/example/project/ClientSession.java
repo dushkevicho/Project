@@ -1,15 +1,19 @@
 package com.example.project;
 
-import java.time.LocalDateTime;
-import org.apache.commons.lang3.StringUtils;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 import static org.apache.commons.lang3.StringUtils.isNumeric;
+
 
 public class ClientSession {
     private String location;
     private int sessionId;
     private String sessionType;
-    private LocalDateTime dateTime;
+    private Calendar dateTime;
     private String serviceName;
     private String serviceType;
     private String clientCode;
@@ -29,6 +33,8 @@ public class ClientSession {
     private String comment;
     private String clientTags;
     private Boolean videoSession;
+    private String DATE_PATTERN = "dd/MM/yyyy hh:mm a";
+
 
     private ClientSession(ClientSessionBuilder builder) {
         this.location = builder.location;
@@ -70,7 +76,7 @@ public class ClientSession {
         return sessionType;
     }
 
-    public LocalDateTime getDateTime() {
+    public Calendar getDateTime() {
         return dateTime;
     }
 
@@ -155,7 +161,7 @@ public class ClientSession {
         private String location = null;
         private int sessionId = 0;
         private String sessionType = null;
-        private LocalDateTime dateTime = null;
+        private Calendar dateTime = null;
         private String serviceName = null;
         private String serviceType = null;
         private String clientCode = null;
@@ -174,15 +180,16 @@ public class ClientSession {
         private String noteStatus = null;
         private String comment = null;
         private String clientTags = null;
-        private Boolean videoSession = null;
+        private Boolean videoSession = false;
+        private String DATE_PATTERN;
 
+        // each session will always have a client code and client ID
         public ClientSessionBuilder(String clientCode, String clientId) {
             this.clientCode = clientCode;
+
+            //clientId must be integer
             if (isNumeric(clientId)) {
                 this.clientId = Integer.valueOf(clientId);
-            }
-            else {
-                this.clientId = 0;
             }
         }
 
@@ -190,11 +197,134 @@ public class ClientSession {
             this.location = location;
             return this;
         }
+        public ClientSessionBuilder sessionType(String sessionType) {
+            this.sessionType = sessionType;
+            return this;
+        }
+
+        public ClientSessionBuilder serviceName(String serviceName) {
+            this.serviceName = serviceName;
+            return this;
+        }
+
+        public ClientSessionBuilder serviceType(String serviceType) {
+            this.serviceType = serviceType;
+            return this;
+        }
+
+        public ClientSessionBuilder therapistName(String therapistName) {
+            this.therapistName = therapistName;
+            return this;
+        }
+
+        public ClientSessionBuilder supervisorName(String supervisorName) {
+            this.supervisorName = supervisorName;
+            return this;
+        }
+
+        public ClientSessionBuilder attendance(String attendance) {
+            this.attendance = attendance;
+            return this;
+        }
+
+        public ClientSessionBuilder paymentMethod(String paymentMethod) {
+            this.paymentMethod = paymentMethod;
+            return this;
+        }
+
+        public ClientSessionBuilder noteStatus(String noteStatus) {
+            this.noteStatus = noteStatus;
+            return this;
+        }
+
+        public ClientSessionBuilder comment(String comment) {
+            this.comment = comment;
+            return this;
+        }
+
+        public ClientSessionBuilder clientTags(String clientTags) {
+            this.clientTags = clientTags;
+            return this;
+        }
+
+        public ClientSessionBuilder videoSession(String videoSession) {
+            if (videoSession.equalsIgnoreCase("yes")) {
+                this.videoSession = true;
+            }
+            return this;
+        }
+
+        public ClientSessionBuilder duration(String duration) {
+            if (isNumeric(duration)) {
+                this.duration = Integer.valueOf(duration);
+            }
+            return this;
+        }
+
+        public ClientSessionBuilder fee(String fee) {
+            if (isNumeric(fee)) {
+                this.fee = Integer.valueOf(fee);
+            }
+            return this;
+        }
+
+        public ClientSessionBuilder charged(String charged) {
+            if (isNumeric(charged)) {
+                this.charged = Integer.valueOf(charged);
+            }
+            return this;
+        }
+
+        public ClientSessionBuilder taxCharged(String taxCharged) {
+            if (isNumeric(taxCharged)) {
+                this.taxCharged = Integer.valueOf(taxCharged);
+            }
+            return this;
+        }
+
+        public ClientSessionBuilder paid(String paid) {
+            if (isNumeric(paid)) {
+                this.paid = Integer.valueOf(paid);
+            }
+            return this;
+        }
+
+        public ClientSessionBuilder taxPaid(String taxPaid) {
+            if (isNumeric(taxPaid)) {
+                this.taxPaid = Integer.valueOf(taxPaid);
+            }
+            return this;
+        }
+
+        public ClientSessionBuilder invoiceId(String invoiceId) {
+            if (isNumeric(invoiceId)) {
+                this.invoiceId = Integer.valueOf(invoiceId);
+            }
+            return this;
+        }
+
+        public ClientSessionBuilder sessionId(String sessionId) {
+            if (isNumeric(sessionId)) {
+                this.sessionId = Integer.valueOf(sessionId);
+            }
+            return this;
+        }
+
+        public ClientSessionBuilder dateTime(String dateTime) throws ParseException {
+            this.dateTime = Calendar.getInstance();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("M/dd/yyyy  h:mm:SS aa", Locale.ENGLISH);
+            Date date = dateFormat.parse(dateTime);
+            this.dateTime.setTime(dateFormat.parse(dateTime));
+            return this;
+        }
+
 
         public ClientSession build() {
             ClientSession clientSession = new ClientSession(this);
             return clientSession;
         }
+
+
 
 
 
