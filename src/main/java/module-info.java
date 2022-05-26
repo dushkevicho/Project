@@ -10,6 +10,7 @@ module com.example.project {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires org.apache.commons.lang3;
+    requires com.opencsv;
 
     opens com.example.project to javafx.fxml;
     exports com.example.project;

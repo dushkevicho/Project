@@ -33,7 +33,7 @@ public class ClientSession {
     private String comment;
     private String clientTags;
     private Boolean videoSession;
-    private String DATE_PATTERN = "dd/MM/yyyy hh:mm a";
+    private String DATE_PATTERN = "M/dd/yyyy  h:mm:SS aa";
 
 
     private ClientSession(ClientSessionBuilder builder) {
@@ -154,6 +154,48 @@ public class ClientSession {
 
     public Boolean getVideoSession() {
         return videoSession;
+    }
+
+
+    @Override
+    public boolean equals(Object object) {
+        // If the object is compared with itself then return true
+        if (object == this) {
+            return true;
+        }
+        /* Check if o is an instance of ClientSession or not
+          "null instanceof [type]" also returns false */
+        if (!(object instanceof ClientSession)) {
+            return false;
+        }
+
+        // typecast o to ClientSession so that we can compare data members
+        ClientSession castClientSessionObject = (ClientSession) object;
+
+        return location.equals(castClientSessionObject.location)
+                && sessionId == (castClientSessionObject.sessionId)
+                && sessionType.equals(castClientSessionObject.sessionType)
+                && dateTime.equals(castClientSessionObject.dateTime)
+                && serviceName.equals(castClientSessionObject.serviceName)
+                && serviceType.equals(castClientSessionObject.serviceType)
+                && clientCode.equals(castClientSessionObject.clientCode)
+                && clientId == (castClientSessionObject.clientId)
+                && therapistName.equals(castClientSessionObject.therapistName)
+                && supervisorName.equals(castClientSessionObject.supervisorName)
+                && duration == (castClientSessionObject.duration)
+                && attendance.equals(castClientSessionObject.attendance)
+                && fee == (castClientSessionObject.fee)
+                && charged == (castClientSessionObject.charged)
+                && taxCharged == (castClientSessionObject.taxCharged)
+                && paid == (castClientSessionObject.paid)
+                && taxPaid == (castClientSessionObject.taxPaid)
+                && invoiceId == (castClientSessionObject.invoiceId)
+                && paymentMethod.equals(castClientSessionObject.paymentMethod)
+                && noteStatus.equals(castClientSessionObject.noteStatus)
+                && comment.equals(castClientSessionObject.comment)
+                && clientTags.equals(castClientSessionObject.clientTags)
+                && videoSession.equals(castClientSessionObject.videoSession);
+
     }
 
     public static class ClientSessionBuilder
@@ -318,16 +360,9 @@ public class ClientSession {
             return this;
         }
 
-
         public ClientSession build() {
             ClientSession clientSession = new ClientSession(this);
             return clientSession;
         }
-
-
-
-
-
     }
-
 }
