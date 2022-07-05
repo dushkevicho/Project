@@ -19,7 +19,7 @@ class ClientSessionTest {
     String sessionType1 = "session";
     String serviceName1 = "Random service";
     String serviceType1 = "Individual";
-    String therapistName1 = "Orest";
+    String contractorName1 = "Orest";
     String supervisorName1 = "ORESTD";
     String attendance1 = "Attended";
     String paymentMethod1 = "Credit Card";
@@ -46,6 +46,10 @@ class ClientSessionTest {
     int year2 = 2022;
     int hour2 = 2;
 
+    //todo add some equal tests into builder tests
+
+
+    /* Tests that the ClientSession builder works correctly*/
     @Test
     void testBuilderFull() throws ParseException {
         ClientSession clientSession1 = new ClientSession.ClientSessionBuilder(clientCode1, clientId1)
@@ -55,7 +59,7 @@ class ClientSessionTest {
                 .dateTime(dateTime1)
                 .serviceName(serviceName1)
                 .serviceType(serviceType1)
-                .therapistName(therapistName1)
+                .contractorName(contractorName1)
                 .supervisorName(supervisorName1)
                 .duration(duration1)
                 .attendance(attendance1)
@@ -79,7 +83,7 @@ class ClientSessionTest {
         assertEquals(sessionType1, clientSession1.getSessionType());
         assertEquals(serviceName1, clientSession1.getServiceName());
         assertEquals(serviceType1, clientSession1.getServiceType());
-        assertEquals(therapistName1, clientSession1.getTherapistName());
+        assertEquals(contractorName1, clientSession1.getContractorName());
         assertEquals(supervisorName1, clientSession1.getSupervisorName());
         assertEquals(attendance1, clientSession1.getAttendance());
         assertEquals(paymentMethod1, clientSession1.getPaymentMethod());
@@ -101,10 +105,9 @@ class ClientSessionTest {
         assertEquals(0, clientSession1.getDateTime().get(Calendar.HOUR));
         SimpleDateFormat dateFormat = new SimpleDateFormat("M/dd/yyyy  h:mm:SS aa", Locale.ENGLISH);
         assertEquals(dateTime1, dateFormat.format(clientSession1.getDateTime().getTime()));
-
-
     }
 
+    /* tests the equal method in ClientSession */
     @Test
     void testEquals() throws ParseException {
         ClientSession clientSession1 = new ClientSession.ClientSessionBuilder(clientCode1, clientId1)
@@ -114,7 +117,7 @@ class ClientSessionTest {
                 .dateTime(dateTime1)
                 .serviceName(serviceName1)
                 .serviceType(serviceType1)
-                .therapistName(therapistName1)
+                .contractorName(contractorName1)
                 .supervisorName(supervisorName1)
                 .duration(duration1)
                 .attendance(attendance1)
@@ -130,7 +133,7 @@ class ClientSessionTest {
                 .clientTags(clientTags1)
                 .videoSession(videoSession1)
                 .build();
-
+        //TODO make new object
         ClientSession clientSession2 = new ClientSession.ClientSessionBuilder(clientCode1, clientId1)
                 .location(location1)
                 .sessionId(sessionId1)
@@ -138,7 +141,7 @@ class ClientSessionTest {
                 .dateTime(dateTime1)
                 .serviceName(serviceName1)
                 .serviceType(serviceType1)
-                .therapistName(therapistName1)
+                .contractorName(contractorName1)
                 .supervisorName(supervisorName1)
                 .duration(duration1)
                 .attendance(attendance1)
@@ -154,7 +157,7 @@ class ClientSessionTest {
                 .clientTags(clientTags1)
                 .videoSession(videoSession1)
                 .build();
-
+        //TODO test each equals
         ClientSession clientSession3 = new ClientSession.ClientSessionBuilder(clientCode1, clientId1)
                 .location("different")
                 .sessionId(sessionId1)
@@ -162,7 +165,7 @@ class ClientSessionTest {
                 .dateTime(dateTime1)
                 .serviceName(serviceName1)
                 .serviceType(serviceType1)
-                .therapistName(therapistName1)
+                .contractorName(contractorName1)
                 .supervisorName(supervisorName1)
                 .duration(duration1)
                 .attendance(attendance1)
@@ -188,11 +191,15 @@ class ClientSessionTest {
         // test that its unequal equal to different objects
         assertNotEquals(clientSession1,"not a clientSession object");
 
-        // test that its unequal equal to different ClientSession
+        // test that its unequal
         assertNotEquals(clientSession1,clientSession3);
+
+        // test that its unequal again
+        assertNotEquals(clientSession2,clientSession3);
 
     }
 
+    /* testing builder fot first time*/
     @Test
     void testBuilder() {
 
@@ -214,6 +221,7 @@ class ClientSessionTest {
         assertEquals(0, clientSession3.getClientId());
     }
 
+    /* testing ClientSession builder for location*/
     @Test
     void testBuilderLocation() {
         ClientSession clientSession1 = new ClientSession.ClientSessionBuilder(clientCode1, clientId1)
@@ -229,6 +237,7 @@ class ClientSessionTest {
         assertEquals("", clientSession2.getLocation());
     }
 
+    /* testing ClientSession builder for sessionType*/
     @Test
     void testBuilderSessionType() {
         ClientSession clientSession1 = new ClientSession.ClientSessionBuilder(clientCode1, clientId1)
@@ -244,6 +253,7 @@ class ClientSessionTest {
         assertEquals("", clientSession2.getSessionType());
     }
 
+    /* testing ClientSession builder for serviceName*/
     @Test
     void testBuilderServiceName() {
         ClientSession clientSession1 = new ClientSession.ClientSessionBuilder(clientCode1, clientId1)
@@ -259,6 +269,7 @@ class ClientSessionTest {
         assertEquals("", clientSession2.getServiceName());
     }
 
+    /* testing ClientSession builder for serviceType*/
     @Test
     void testBuilderServiceType() {
         ClientSession clientSession1 = new ClientSession.ClientSessionBuilder(clientCode1, clientId1)
@@ -270,27 +281,27 @@ class ClientSessionTest {
         // test empty location
         ClientSession clientSession2 = new ClientSession.ClientSessionBuilder(clientCode1, clientId1)
                 .serviceType("")
-
                 .build();
         assertEquals("", clientSession2.getServiceType());
     }
 
+    /* testing ClientSession builder for contractorName*/
     @Test
-    void testBuilderTherapistName() {
+    void testBuilderContractorName() {
         ClientSession clientSession1 = new ClientSession.ClientSessionBuilder(clientCode1, clientId1)
-                .therapistName(therapistName1)
+                .contractorName(contractorName1)
                 .build();
 
-        assertEquals(therapistName1, clientSession1.getTherapistName());
+        assertEquals(contractorName1, clientSession1.getContractorName());
 
         // test empty location
         ClientSession clientSession2 = new ClientSession.ClientSessionBuilder(clientCode1, clientId1)
-                .therapistName("")
-
+                .contractorName("")
                 .build();
-        assertEquals("", clientSession2.getTherapistName());
+        assertEquals("", clientSession2.getContractorName());
     }
 
+    /* testing ClientSession builder for supervisorName*/
     @Test
     void testBuilderSupervisorName() {
         ClientSession clientSession1 = new ClientSession.ClientSessionBuilder(clientCode1, clientId1)
@@ -302,11 +313,11 @@ class ClientSessionTest {
         // test empty location
         ClientSession clientSession2 = new ClientSession.ClientSessionBuilder(clientCode1, clientId1)
                 .supervisorName("")
-
                 .build();
         assertEquals("", clientSession2.getSupervisorName());
     }
 
+    /* testing ClientSession builder for attendance*/
     @Test
     void testBuilderAttendance() {
         ClientSession clientSession1 = new ClientSession.ClientSessionBuilder(clientCode1, clientId1)
@@ -318,11 +329,11 @@ class ClientSessionTest {
         // test empty location
         ClientSession clientSession2 = new ClientSession.ClientSessionBuilder(clientCode1, clientId1)
                 .attendance("")
-
                 .build();
         assertEquals("", clientSession2.getAttendance());
     }
 
+    /* testing ClientSession builder for paymentMethod*/
     @Test
     void testBuilderGetPaymentMethod() {
         ClientSession clientSession1 = new ClientSession.ClientSessionBuilder(clientCode1, clientId1)
@@ -334,11 +345,11 @@ class ClientSessionTest {
         // test empty location
         ClientSession clientSession2 = new ClientSession.ClientSessionBuilder(clientCode1, clientId1)
                 .paymentMethod("")
-
                 .build();
         assertEquals("", clientSession2.getPaymentMethod());
     }
 
+    /* testing ClientSession builder for noteStatus*/
     @Test
     void testBuilderNoteStatus() {
         ClientSession clientSession1 = new ClientSession.ClientSessionBuilder(clientCode1, clientId1)
@@ -355,6 +366,7 @@ class ClientSessionTest {
         assertEquals("", clientSession2.getNoteStatus());
     }
 
+    /* testing ClientSession builder for comment*/
     @Test
     void testBuilderComment() {
         ClientSession clientSession1 = new ClientSession.ClientSessionBuilder(clientCode1, clientId1)
@@ -366,11 +378,11 @@ class ClientSessionTest {
         // test empty location
         ClientSession clientSession2 = new ClientSession.ClientSessionBuilder(clientCode1, clientId1)
                 .comment("")
-
                 .build();
         assertEquals("", clientSession2.getComment());
     }
 
+    /* testing ClientSession builder for clientTags*/
     @Test
     void testBuilderClientTags() {
         ClientSession clientSession1 = new ClientSession.ClientSessionBuilder(clientCode1, clientId1)
@@ -382,11 +394,11 @@ class ClientSessionTest {
         // test empty location
         ClientSession clientSession2 = new ClientSession.ClientSessionBuilder(clientCode1, clientId1)
                 .clientTags("")
-
                 .build();
         assertEquals("", clientSession2.getClientTags());
     }
 
+    /* testing ClientSession builder for videoSession*/
     @Test
     void testBuilderVideoSession() {
         ClientSession clientSession1 = new ClientSession.ClientSessionBuilder(clientCode1, clientId1)
@@ -419,6 +431,7 @@ class ClientSessionTest {
         assertEquals(false, clientSession5.getVideoSession());
     }
 
+    /* testing ClientSession builder for duration*/
     @Test
     void testBuilderDuration() {
         ClientSession clientSession1 = new ClientSession.ClientSessionBuilder(clientCode1, clientId1)
@@ -447,6 +460,7 @@ class ClientSessionTest {
         assertEquals(0, clientSession4.getDuration());
     }
 
+    /* testing ClientSession builder for fee*/
     @Test
     void testBuilderFee() {
         ClientSession clientSession1 = new ClientSession.ClientSessionBuilder(clientCode1, clientId1)
@@ -475,6 +489,7 @@ class ClientSessionTest {
         assertEquals(0, clientSession4.getFee());
     }
 
+    /* testing ClientSession builder for charged*/
     @Test
     void testBuilderCharged() {
         ClientSession clientSession1 = new ClientSession.ClientSessionBuilder(clientCode1, clientId1)
@@ -503,6 +518,7 @@ class ClientSessionTest {
         assertEquals(0, clientSession4.getCharged());
     }
 
+    /* testing ClientSession builder for taxCharged*/
     @Test
     void testBuilderTaxCharged() {
         ClientSession clientSession1 = new ClientSession.ClientSessionBuilder(clientCode1, clientId1)
@@ -531,6 +547,7 @@ class ClientSessionTest {
         assertEquals(0, clientSession4.getTaxCharged());
     }
 
+    /* testing ClientSession builder for paid*/
     @Test
     void testBuilderPaid() {
         ClientSession clientSession1 = new ClientSession.ClientSessionBuilder(clientCode1, clientId1)
@@ -559,6 +576,7 @@ class ClientSessionTest {
         assertEquals(0, clientSession4.getPaid());
     }
 
+    /* testing ClientSession builder for taxPaid*/
     @Test
     void testBuilderTaxPaid() {
         ClientSession clientSession1 = new ClientSession.ClientSessionBuilder(clientCode1, clientId1)
@@ -587,6 +605,7 @@ class ClientSessionTest {
         assertEquals(0, clientSession4.getTaxPaid());
     }
 
+    /* testing ClientSession builder for invoiceId*/
     @Test
     void testBuilderInvoiceId() {
         ClientSession clientSession1 = new ClientSession.ClientSessionBuilder(clientCode1, clientId1)
@@ -615,6 +634,7 @@ class ClientSessionTest {
         assertEquals(0, clientSession4.getInvoiceId());
     }
 
+    /* testing ClientSession builder for sessionId*/
     @Test
     void testBuilderSessionId() {
         ClientSession clientSession1 = new ClientSession.ClientSessionBuilder(clientCode1, clientId1)
@@ -643,6 +663,7 @@ class ClientSessionTest {
         assertEquals(0, clientSession4.getSessionId());
     }
 
+    /* testing ClientSession builder for dateTime*/
     @Test
     void testBuilderDateTime() throws ParseException {
         SimpleDateFormat dateFormat = new SimpleDateFormat("M/dd/yyyy  h:mm:SS aa", Locale.ENGLISH);

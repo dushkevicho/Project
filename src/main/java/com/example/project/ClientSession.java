@@ -8,32 +8,36 @@ import java.util.Locale;
 
 import static org.apache.commons.lang3.StringUtils.isNumeric;
 
+//TODO change money to big decimal or maybe convert to cents
+//todo test to make sure builder can handle no client code or no client ID
 
 public class ClientSession {
-    private String location;
-    private int sessionId;
-    private String sessionType;
-    private Calendar dateTime;
-    private String serviceName;
-    private String serviceType;
-    private String clientCode;
-    private int clientId;
-    private String therapistName;
-    private String supervisorName;
-    private int duration;
-    private String attendance;
-    private int fee;
-    private int charged;
-    private int taxCharged;
-    private int paid;
-    private int taxPaid;
-    private int invoiceId;
-    private String paymentMethod;
-    private String noteStatus;
-    private String comment;
-    private String clientTags;
-    private Boolean videoSession;
-    private String DATE_PATTERN = "M/dd/yyyy  h:mm:SS aa";
+
+    /* to create */
+    private String location;    // branch location
+    private int sessionId;      // ID number of session
+    private String sessionType; // string value of type of session
+    private Calendar dateTime;  // date of the session
+    private String serviceName; // description of service
+    private String serviceType; // service type category
+    private String clientCode;  // unique client code
+    private int clientId;       // unique client ID
+    private String contractorName; //name of the contractor
+    private String supervisorName;  // contractors supervisor if required
+    private int duration;       // duration of session in minutes
+    private String attendance;  // type of attendance
+    private int fee;            // fee for service in dollars
+    private int charged;        // fee that was charged to customer
+    private int taxCharged;     // tax that was charged
+    private int paid;           // amount that customer paid
+    private int taxPaid;        // tax that was paid by customer
+    private int invoiceId;      // unique invoice ID for charged session
+    private String paymentMethod;   // payment methods //todo can be split up into a list
+    private String noteStatus;  // status of note
+    private String comment;     // session comments
+    private String clientTags;  // client tags //todo can be split up into a list
+    private Boolean videoSession; // if was tagged as a video session
+    private String DATE_PATTERN = "M/dd/yyyy  h:mm:SS aa"; // todo can probably delete
 
 
     private ClientSession(ClientSessionBuilder builder) {
@@ -45,7 +49,7 @@ public class ClientSession {
         this.serviceType = builder.serviceType;
         this.clientCode = builder.clientCode;
         this.clientId = builder.clientId;
-        this.therapistName = builder.therapistName;
+        this.contractorName = builder.contractorName;
         this.supervisorName = builder.supervisorName;
         this.duration = builder.duration;
         this.attendance = builder.attendance;
@@ -96,8 +100,8 @@ public class ClientSession {
         return clientId;
     }
 
-    public String getTherapistName() {
-        return therapistName;
+    public String getContractorName() {
+        return contractorName;
     }
 
     public String getSupervisorName() {
@@ -180,7 +184,7 @@ public class ClientSession {
                 && serviceType.equals(castClientSessionObject.serviceType)
                 && clientCode.equals(castClientSessionObject.clientCode)
                 && clientId == (castClientSessionObject.clientId)
-                && therapistName.equals(castClientSessionObject.therapistName)
+                && contractorName.equals(castClientSessionObject.contractorName)
                 && supervisorName.equals(castClientSessionObject.supervisorName)
                 && duration == (castClientSessionObject.duration)
                 && attendance.equals(castClientSessionObject.attendance)
@@ -208,7 +212,7 @@ public class ClientSession {
         private String serviceType = null;
         private String clientCode = null;
         private int clientId = 0;
-        private String therapistName = null;
+        private String contractorName = null;
         private String supervisorName = null;
         private int duration = 0;
         private String attendance = null;
@@ -223,7 +227,7 @@ public class ClientSession {
         private String comment = null;
         private String clientTags = null;
         private Boolean videoSession = false;
-        private String DATE_PATTERN;
+        private String DATE_PATTERN; // todo can probably delete
 
         // each session will always have a client code and client ID
         public ClientSessionBuilder(String clientCode, String clientId) {
@@ -254,8 +258,8 @@ public class ClientSession {
             return this;
         }
 
-        public ClientSessionBuilder therapistName(String therapistName) {
-            this.therapistName = therapistName;
+        public ClientSessionBuilder contractorName(String contractorName) {
+            this.contractorName = contractorName;
             return this;
         }
 

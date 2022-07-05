@@ -52,7 +52,7 @@ public class ParseCsvFile {
                 .dateTime(clientSessionLine[3])
                 .serviceName(clientSessionLine[4])
                 .serviceType(clientSessionLine[5])
-                .therapistName(clientSessionLine[8])
+                .contractorName(clientSessionLine[8])
                 .supervisorName(clientSessionLine[9])
                 .duration(clientSessionLine[10])
                 .attendance(clientSessionLine[11])
