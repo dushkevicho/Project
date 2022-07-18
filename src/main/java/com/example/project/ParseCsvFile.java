@@ -68,11 +68,6 @@ public class ParseCsvFile {
                 .clientTags(clientSessionLine[21])
                 .videoSession(clientSessionLine[22])
                 .build();
-
-
-
-
-
         return clientSession;
 
     }

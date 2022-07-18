@@ -176,10 +176,12 @@ public class ClientSession {
         // typecast o to ClientSession so that we can compare data members
         ClientSession castClientSessionObject = (ClientSession) object;
 
+
+
         return location.equals(castClientSessionObject.location)
                 && sessionId == (castClientSessionObject.sessionId)
-                && sessionType.equals(castClientSessionObject.sessionType)
                 && dateTime.equals(castClientSessionObject.dateTime)
+                && sessionType.equals(castClientSessionObject.sessionType)
                 && serviceName.equals(castClientSessionObject.serviceName)
                 && serviceType.equals(castClientSessionObject.serviceType)
                 && clientCode.equals(castClientSessionObject.clientCode)
@@ -358,9 +360,42 @@ public class ClientSession {
 
         public ClientSessionBuilder dateTime(String dateTime) throws ParseException {
             this.dateTime = Calendar.getInstance();
-            SimpleDateFormat dateFormat = new SimpleDateFormat("M/dd/yyyy  h:mm:SS aa", Locale.ENGLISH);
-            Date date = dateFormat.parse(dateTime);
-            this.dateTime.setTime(dateFormat.parse(dateTime));
+
+            // if there is no dateTime creates a day on Jan 1, 2000 00:00:00
+            if (dateTime == "") {
+
+                this.dateTime.set(Calendar.MONTH, 0);
+                this.dateTime.set(Calendar.DATE, 1);
+                this.dateTime.set(Calendar.YEAR, 2000);
+                this.dateTime.set(Calendar.HOUR_OF_DAY, 0);
+                this.dateTime.set(Calendar.MINUTE, 0);
+                this.dateTime.set(Calendar.MILLISECOND, 0);
+                return this;
+            }
+            String[] dateTimeNew = dateTime.split(" ");
+            String[] date = dateTimeNew[0].split("/");
+            String[] time = dateTimeNew[
+                    1].split(":");
+
+            this.dateTime.set(Calendar.MONTH, Integer.parseInt(date[0])-1);
+            this.dateTime.set(Calendar.DATE, Integer.parseInt(date[1]));
+
+            // if the year shows up as 2 digits
+            if ( Integer.parseInt(date[2]) >= 0
+                    && Integer.parseInt(date[2]) < 100) {
+                this.dateTime.set(Calendar.YEAR, Integer.parseInt(date[2])+2000);
+
+            } else {
+                this.dateTime.set(Calendar.YEAR, Integer.parseInt(date[2]));
+            }
+
+
+            this.dateTime.set(Calendar.HOUR_OF_DAY, Integer.parseInt(time[0]));
+            this.dateTime.set(Calendar.MINUTE, Integer.parseInt(time[1]));
+            // override to 0 due to .getInstance();
+            this.dateTime.set(Calendar.MILLISECOND, 0);
+
+            // System.out.println(this.dateTime.getTime());
             return this;
         }
 

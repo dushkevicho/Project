@@ -35,16 +35,18 @@ class ClientSessionTest {
     String taxPaid1 = "5";
     String invoiceId1 = "88";
     String sessionId1 = "9876";
-    String dateTime1 = "2/27/2022  12:00:00 PM";
+    String dateTime1 = "2/27/2022 11:00:00";
+    String dateTime1Print = "2/27/2022  11:00:00 AM";
     int day1 = 27;
     int month1 = 2;
     int year1 = 2022;
-    int hour1 = 12;
-    String dateTime2 = "1/13/2022  2:00:00 PM";
+    int hour1 = 11;
+    String dateTime2 = "1/13/2022 15:00:00";
+    String dateTime2Print = "1/13/2022  3:00:00 PM";
     int day2 = 13;
     int month2 = 1;
     int year2 = 2022;
-    int hour2 = 2;
+    int hour2 = 15;
 
     //todo add some equal tests into builder tests
 
@@ -102,9 +104,9 @@ class ClientSessionTest {
         assertEquals(day1, clientSession1.getDateTime().get(Calendar.DATE));
         assertEquals(month1-1, clientSession1.getDateTime().get(Calendar.MONTH));
         assertEquals(year1, clientSession1.getDateTime().get(Calendar.YEAR));
-        assertEquals(0, clientSession1.getDateTime().get(Calendar.HOUR));
+        assertEquals(11, clientSession1.getDateTime().get(Calendar.HOUR_OF_DAY));
         SimpleDateFormat dateFormat = new SimpleDateFormat("M/dd/yyyy  h:mm:SS aa", Locale.ENGLISH);
-        assertEquals(dateTime1, dateFormat.format(clientSession1.getDateTime().getTime()));
+        assertEquals(dateTime1Print, dateFormat.format(clientSession1.getDateTime().getTime()));
     }
 
     /* tests the equal method in ClientSession */
@@ -675,9 +677,9 @@ class ClientSessionTest {
         assertEquals(day1, clientSession1.getDateTime().get(Calendar.DATE));
         assertEquals(month1-1, clientSession1.getDateTime().get(Calendar.MONTH));
         assertEquals(year1, clientSession1.getDateTime().get(Calendar.YEAR));
-        assertEquals(0, clientSession1.getDateTime().get(Calendar.HOUR));
+        assertEquals(hour1, clientSession1.getDateTime().get(Calendar.HOUR_OF_DAY));
         // checks to see if inputted time is the same as outputted time
-        assertEquals(dateTime1, dateFormat.format(clientSession1.getDateTime().getTime()));
+        assertEquals(dateTime1Print, dateFormat.format(clientSession1.getDateTime().getTime()));
 
         ClientSession clientSession2 = new ClientSession.ClientSessionBuilder(clientCode1, clientId1)
                 .dateTime(dateTime2)
@@ -687,9 +689,9 @@ class ClientSessionTest {
         assertEquals(day2, clientSession2.getDateTime().get(Calendar.DATE));
         assertEquals(month2-1, clientSession2.getDateTime().get(Calendar.MONTH));
         assertEquals(year2, clientSession2.getDateTime().get(Calendar.YEAR));
-        assertEquals(hour2, clientSession2.getDateTime().get(Calendar.HOUR));
+        assertEquals(hour2, clientSession2.getDateTime().get(Calendar.HOUR_OF_DAY));
         // checks to see if inputted time is the same as outputted time
-        assertEquals(dateTime2, dateFormat.format(clientSession2.getDateTime().getTime()));
+        assertEquals(dateTime2Print, dateFormat.format(clientSession2.getDateTime().getTime()));
 
     }
 
