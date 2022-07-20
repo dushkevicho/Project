@@ -1,5 +1,6 @@
 package com.example.project;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -8,7 +9,7 @@ import java.util.Locale;
 
 import static org.apache.commons.lang3.StringUtils.isNumeric;
 
-//TODO change money to big decimal or maybe convert to cents
+
 //todo test to make sure builder can handle no client code or no client ID
 
 public class ClientSession {
@@ -26,11 +27,11 @@ public class ClientSession {
     private String supervisorName;  // contractors supervisor if required
     private int duration;       // duration of session in minutes
     private String attendance;  // type of attendance
-    private int fee;            // fee for service in dollars
-    private int charged;        // fee that was charged to customer
-    private int taxCharged;     // tax that was charged
-    private int paid;           // amount that customer paid
-    private int taxPaid;        // tax that was paid by customer
+    private BigDecimal fee;            // fee for service in dollars
+    private BigDecimal charged;        // fee that was charged to customer
+    private BigDecimal taxCharged;     // tax that was charged
+    private BigDecimal paid;           // amount that customer paid
+    private BigDecimal taxPaid;        // tax that was paid by customer
     private int invoiceId;      // unique invoice ID for charged session
     private String paymentMethod;   // payment methods //todo can be split up into a list
     private String noteStatus;  // status of note
@@ -116,23 +117,23 @@ public class ClientSession {
         return attendance;
     }
 
-    public int getFee() {
+    public BigDecimal getFee() {
         return fee;
     }
 
-    public int getCharged() {
+    public BigDecimal getCharged() {
         return charged;
     }
 
-    public int getTaxCharged() {
+    public BigDecimal getTaxCharged() {
         return taxCharged;
     }
 
-    public int getPaid() {
+    public BigDecimal getPaid() {
         return paid;
     }
 
-    public int getTaxPaid() {
+    public BigDecimal getTaxPaid() {
         return taxPaid;
     }
 
@@ -190,11 +191,11 @@ public class ClientSession {
                 && supervisorName.equals(castClientSessionObject.supervisorName)
                 && duration == (castClientSessionObject.duration)
                 && attendance.equals(castClientSessionObject.attendance)
-                && fee == (castClientSessionObject.fee)
-                && charged == (castClientSessionObject.charged)
-                && taxCharged == (castClientSessionObject.taxCharged)
-                && paid == (castClientSessionObject.paid)
-                && taxPaid == (castClientSessionObject.taxPaid)
+                && fee.equals(castClientSessionObject.fee)
+                && charged.equals(castClientSessionObject.charged)
+                && taxCharged.equals(castClientSessionObject.taxCharged)
+                && paid.equals(castClientSessionObject.paid)
+                && taxPaid.equals(castClientSessionObject.taxPaid)
                 && invoiceId == (castClientSessionObject.invoiceId)
                 && paymentMethod.equals(castClientSessionObject.paymentMethod)
                 && noteStatus.equals(castClientSessionObject.noteStatus)
@@ -218,11 +219,11 @@ public class ClientSession {
         private String supervisorName = null;
         private int duration = 0;
         private String attendance = null;
-        private int fee = 0;
-        private int charged = 0;
-        private int taxCharged = 0;
-        private int paid = 0;
-        private int taxPaid = 0;
+        private BigDecimal fee = new BigDecimal("0.00");
+        private BigDecimal charged = new BigDecimal("0.00");
+        private BigDecimal taxCharged = new BigDecimal("0.00");
+        private BigDecimal paid = new BigDecimal("0.00");
+        private BigDecimal taxPaid = new BigDecimal("0.00");
         private int invoiceId = 0;
         private String paymentMethod = null;
         private String noteStatus = null;
@@ -311,35 +312,35 @@ public class ClientSession {
 
         public ClientSessionBuilder fee(String fee) {
             if (isNumeric(fee)) {
-                this.fee = Integer.valueOf(fee);
+                this.fee = new BigDecimal(fee);
             }
             return this;
         }
 
         public ClientSessionBuilder charged(String charged) {
             if (isNumeric(charged)) {
-                this.charged = Integer.valueOf(charged);
+                this.charged = new BigDecimal(charged);
             }
             return this;
         }
 
         public ClientSessionBuilder taxCharged(String taxCharged) {
             if (isNumeric(taxCharged)) {
-                this.taxCharged = Integer.valueOf(taxCharged);
+                this.taxCharged = new BigDecimal(taxCharged);
             }
             return this;
         }
 
         public ClientSessionBuilder paid(String paid) {
             if (isNumeric(paid)) {
-                this.paid = Integer.valueOf(paid);
+                this.paid = new BigDecimal(paid);
             }
             return this;
         }
 
         public ClientSessionBuilder taxPaid(String taxPaid) {
             if (isNumeric(taxPaid)) {
-                this.taxPaid = Integer.valueOf(taxPaid);
+                this.taxPaid = new BigDecimal(taxPaid);
             }
             return this;
         }

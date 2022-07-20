@@ -2,6 +2,7 @@ package com.example.project;
 
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -88,11 +89,11 @@ class CsvGetDataDAOTest {
         assertEquals("['Green Shield']", clientSession1.getClientTags());
         assertEquals(false, clientSession1.getVideoSession());
         assertEquals(50, clientSession1.getDuration());
-        assertEquals(200, clientSession1.getFee());
-        assertEquals(200, clientSession1.getCharged());
-        assertEquals(0, clientSession1.getTaxCharged());
-        assertEquals(200, clientSession1.getPaid());
-        assertEquals(0, clientSession1.getTaxPaid());
+        assertEquals(new BigDecimal("200"), clientSession1.getFee());
+        assertEquals(new BigDecimal("200"), clientSession1.getCharged());
+        assertEquals(new BigDecimal("0"), clientSession1.getTaxCharged());
+        assertEquals(new BigDecimal("200"), clientSession1.getPaid());
+        assertEquals(new BigDecimal("0"), clientSession1.getTaxPaid());
         assertEquals(7404, clientSession1.getInvoiceId());
         assertEquals(8275, clientSession1.getSessionId());
         assertEquals(7, clientSession1.getDateTime().get(Calendar.DATE));
@@ -121,11 +122,11 @@ class CsvGetDataDAOTest {
         assertEquals("", clientSession2.getClientTags());
         assertEquals(false, clientSession2.getVideoSession());
         assertEquals(0, clientSession2.getDuration());
-        assertEquals(0, clientSession2.getFee());
-        assertEquals(0, clientSession2.getCharged());
-        assertEquals(0, clientSession2.getTaxCharged());
-        assertEquals(0, clientSession2.getPaid());
-        assertEquals(0, clientSession2.getTaxPaid());
+        assertEquals(new BigDecimal("0.00"), clientSession2.getFee());
+        assertEquals(new BigDecimal("0.00"), clientSession2.getCharged());
+        assertEquals(new BigDecimal("0.00"), clientSession2.getTaxCharged());
+        assertEquals(new BigDecimal("0.00"), clientSession2.getPaid());
+        assertEquals(new BigDecimal("0.00"), clientSession2.getTaxPaid());
         assertEquals(0, clientSession2.getInvoiceId());
         assertEquals(0, clientSession2.getSessionId());
         assertEquals(1, clientSession2.getDateTime().get(Calendar.DATE));

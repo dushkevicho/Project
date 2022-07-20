@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -94,11 +95,11 @@ class ClientSessionTest {
         assertEquals(clientTags1, clientSession1.getClientTags());
         assertEquals(true, clientSession1.getVideoSession());
         assertEquals(Integer.parseInt(duration1), clientSession1.getDuration());
-        assertEquals(Integer.parseInt(fee1), clientSession1.getFee());
-        assertEquals(Integer.parseInt(charged1), clientSession1.getCharged());
-        assertEquals(Integer.parseInt(taxCharged1), clientSession1.getTaxCharged());
-        assertEquals(Integer.parseInt(paid1), clientSession1.getPaid());
-        assertEquals(Integer.parseInt(taxPaid1), clientSession1.getTaxPaid());
+        assertEquals(new BigDecimal(fee1), clientSession1.getFee());
+        assertEquals(new BigDecimal(charged1), clientSession1.getCharged());
+        assertEquals(new BigDecimal(taxCharged1), clientSession1.getTaxCharged());
+        assertEquals(new BigDecimal(paid1), clientSession1.getPaid());
+        assertEquals(new BigDecimal(taxPaid1), clientSession1.getTaxPaid());
         assertEquals(Integer.parseInt(invoiceId1), clientSession1.getInvoiceId());
         assertEquals(Integer.parseInt(sessionId1), clientSession1.getSessionId());
         assertEquals(day1, clientSession1.getDateTime().get(Calendar.DATE));
@@ -469,26 +470,26 @@ class ClientSessionTest {
                 .fee(fee1)
                 .build();
 
-        assertEquals(Integer.parseInt(fee1), clientSession1.getFee());
+        assertEquals(new BigDecimal(fee1), clientSession1.getFee());
 
         // test empty location
         ClientSession clientSession2 = new ClientSession.ClientSessionBuilder(clientCode1, clientId1)
                 .fee("")
                 .build();
-        assertEquals(0, clientSession2.getFee());
+        assertEquals(new BigDecimal("0.00"), clientSession2.getFee());
 
         // test invalid
         // pass a string
         ClientSession clientSession3 = new ClientSession.ClientSessionBuilder(clientCode1, clientId1)
                 .fee("String")
                 .build();
-        assertEquals(0, clientSession3.getFee());
+        assertEquals(new BigDecimal("0.00"), clientSession3.getFee());
 
         //test negative
         ClientSession clientSession4 = new ClientSession.ClientSessionBuilder(clientCode1, clientId1)
                 .fee("-10")
                 .build();
-        assertEquals(0, clientSession4.getFee());
+        assertEquals(new BigDecimal("0.00"), clientSession4.getFee());
     }
 
     /* testing ClientSession builder for charged*/
@@ -498,26 +499,26 @@ class ClientSessionTest {
                 .charged(charged1)
                 .build();
 
-        assertEquals(Integer.parseInt(charged1), clientSession1.getCharged());
+        assertEquals(new BigDecimal(charged1), clientSession1.getCharged());
 
         // test empty location
         ClientSession clientSession2 = new ClientSession.ClientSessionBuilder(clientCode1, clientId1)
                 .charged("")
                 .build();
-        assertEquals(0, clientSession2.getCharged());
+        assertEquals(new BigDecimal("0.00"), clientSession2.getCharged());
 
         // test invalid
         // pass a string
         ClientSession clientSession3 = new ClientSession.ClientSessionBuilder(clientCode1, clientId1)
                 .charged("String")
                 .build();
-        assertEquals(0, clientSession3.getCharged());
+        assertEquals(new BigDecimal("0.00"), clientSession3.getCharged());
 
         //test negative
         ClientSession clientSession4 = new ClientSession.ClientSessionBuilder(clientCode1, clientId1)
                 .charged("-10")
                 .build();
-        assertEquals(0, clientSession4.getCharged());
+        assertEquals(new BigDecimal("0.00"), clientSession4.getCharged());
     }
 
     /* testing ClientSession builder for taxCharged*/
@@ -527,26 +528,26 @@ class ClientSessionTest {
                 .taxCharged(taxCharged1)
                 .build();
 
-        assertEquals(Integer.parseInt(taxCharged1), clientSession1.getTaxCharged());
+        assertEquals(new BigDecimal(taxCharged1), clientSession1.getTaxCharged());
 
         // test empty location
         ClientSession clientSession2 = new ClientSession.ClientSessionBuilder(clientCode1, clientId1)
                 .taxCharged("")
                 .build();
-        assertEquals(0, clientSession2.getTaxCharged());
+        assertEquals(new BigDecimal("0.00"), clientSession2.getTaxCharged());
 
         // test invalid
         // pass a string
         ClientSession clientSession3 = new ClientSession.ClientSessionBuilder(clientCode1, clientId1)
                 .taxCharged("String")
                 .build();
-        assertEquals(0, clientSession3.getTaxCharged());
+        assertEquals(new BigDecimal("0.00"), clientSession3.getTaxCharged());
 
         //test negative
         ClientSession clientSession4 = new ClientSession.ClientSessionBuilder(clientCode1, clientId1)
                 .taxCharged("-10")
                 .build();
-        assertEquals(0, clientSession4.getTaxCharged());
+        assertEquals(new BigDecimal("0.00"), clientSession4.getTaxCharged());
     }
 
     /* testing ClientSession builder for paid*/
@@ -556,26 +557,26 @@ class ClientSessionTest {
                 .paid(paid1)
                 .build();
 
-        assertEquals(Integer.parseInt(paid1), clientSession1.getPaid());
+        assertEquals(new BigDecimal(paid1), clientSession1.getPaid());
 
         // test empty location
         ClientSession clientSession2 = new ClientSession.ClientSessionBuilder(clientCode1, clientId1)
                 .paid("")
                 .build();
-        assertEquals(0, clientSession2.getPaid());
+        assertEquals(new BigDecimal("0.00"), clientSession2.getPaid());
 
         // test invalid
         // pass a string
         ClientSession clientSession3 = new ClientSession.ClientSessionBuilder(clientCode1, clientId1)
                 .paid("String")
                 .build();
-        assertEquals(0, clientSession3.getPaid());
+        assertEquals(new BigDecimal("0.00"), clientSession3.getPaid());
 
         //test negative
         ClientSession clientSession4 = new ClientSession.ClientSessionBuilder(clientCode1, clientId1)
                 .paid("-10")
                 .build();
-        assertEquals(0, clientSession4.getPaid());
+        assertEquals(new BigDecimal("0.00"), clientSession4.getPaid());
     }
 
     /* testing ClientSession builder for taxPaid*/
@@ -585,26 +586,26 @@ class ClientSessionTest {
                 .taxPaid(taxPaid1)
                 .build();
 
-        assertEquals(Integer.parseInt(taxPaid1), clientSession1.getTaxPaid());
+        assertEquals(new BigDecimal(taxPaid1), clientSession1.getTaxPaid());
 
         // test empty location
         ClientSession clientSession2 = new ClientSession.ClientSessionBuilder(clientCode1, clientId1)
                 .taxPaid("")
                 .build();
-        assertEquals(0, clientSession2.getTaxPaid());
+        assertEquals(new BigDecimal("0.00"), clientSession2.getTaxPaid());
 
         // test invalid
         // pass a string
         ClientSession clientSession3 = new ClientSession.ClientSessionBuilder(clientCode1, clientId1)
                 .taxPaid("String")
                 .build();
-        assertEquals(0, clientSession3.getTaxPaid());
+        assertEquals(new BigDecimal("0.00"), clientSession3.getTaxPaid());
 
         //test negative
         ClientSession clientSession4 = new ClientSession.ClientSessionBuilder(clientCode1, clientId1)
                 .taxPaid("-10")
                 .build();
-        assertEquals(0, clientSession4.getTaxPaid());
+        assertEquals(new BigDecimal("0.00"), clientSession4.getTaxPaid());
     }
 
     /* testing ClientSession builder for invoiceId*/
