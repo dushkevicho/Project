@@ -101,8 +101,37 @@ public class AllClientSessions {
 
     }
 
+    public int[] getClientIdList(String contractorName) {
+        int index = indexOfContractor(contractorName);
+        Contractor contractor = sortedContractorAllSessions.get(index);
+        int[] clientIdList = contractor.clientIDList();
+        return clientIdList;
+    }
+
+    /* this function returns a Client object if a match is found, returns null if it does not exist */
+    public Client getClientFromContractor(String contractorName, int clientID) {
+        int index = indexOfContractor(contractorName);
+
+        if (index == -1) {
+            return null;
+        }
+        Contractor contractor = sortedContractorAllSessions.get(index);
+        Client client = contractor.getClientFromId(clientID);
+        return client;
+    }
+
     public ArrayList<Contractor> getSortedContractorAllSessions() {
         return sortedContractorAllSessions;
+    }
+    /* this returns the contractor object if a match is found, returns null otherwise*/
+    public Contractor getContractorFromName(String contractorName) {
+        int index = indexOfContractor(contractorName);
+
+        if (index == -1) {
+            return null;
+        }
+        Contractor contractor = sortedContractorAllSessions.get(index);
+        return contractor;
     }
 
 

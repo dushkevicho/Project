@@ -63,6 +63,18 @@ public class Contractor {
         return clientList.size();
     }
 
+    /* this function returns the Client if given a clientId, returns null if does not exist*/
+    public Client getClientFromId(int clientId) {
+        int index = indexOfClient(clientId);
+        if (index == -1) {
+
+            return null;
+        }
+
+        Client client = clientList.get(index);
+        return client;
+    }
+
 
     public ArrayList<Client> getClientList() {
         return clientList;
