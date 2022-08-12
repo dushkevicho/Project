@@ -8,6 +8,8 @@ public class Client {
     private ArrayList<ClientSession> otherChargeList = new ArrayList<>(); // other charge array
     private int clientID;
     private Calendar todayDate;
+    private Calendar earliestDate = null;
+    private Calendar latestDate = null;
     private int futureSessions = 0;
     private int attendedSessions = 0;
     private int cancelledSession = 0;
@@ -15,18 +17,33 @@ public class Client {
     private int lateCancel = 0;
     private int noShow = 0;
 
-
+    
     public Client(int clientID) {
         this.clientID = clientID;
         this.todayDate = Calendar.getInstance();
-    }
+            }
 
     /* this function adds the session to the client and increments relevant statistics about it*/
     public void addSession(ClientSession clientSession) {
 
+        //TODO may need to figure out other charges
+
         // adds the clientSession to the correct list
         if (clientSession.getSessionType().equals("session")) {
             this.clientSessions.add(clientSession);
+
+            // initializes the earliestDate and latestDate
+            if (earliestDate == null) {
+                earliestDate = clientSession.getDateTime;
+                latestDate = clientSession.getDateTime;
+            } else {
+                // set the date time
+                if (clientSession.getDateTime.compareTo(earliestDate) > 0) {
+                    earliestDate = clientSession.getDateTime;
+                } else if (clientSession.getDateTime.compareTo(latestDate) < 0) {
+                    latestDate = clientSession.getDateTime;
+                }
+            }
 
             // increments the futureSessions counter if there is booked session in the future,
             // and it is not cancelled
@@ -103,5 +120,13 @@ public class Client {
 
     public int getNoShow() {
         return noShow;
+    }
+
+    public Calendar geteEarliestDate() {
+        return earliestDate;
+    }
+
+    public Calendar geteLatestDate() {
+        return latestDate;
     }
 }
