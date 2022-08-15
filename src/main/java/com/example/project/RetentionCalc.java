@@ -23,11 +23,13 @@ public class RetentionCalc {
             
             
             
-            if (ValiateToDate() != null) {
-                return ValiateDate();
+            if (validateDate() != null) {
+                return validateDate();
             } 
 
             //TODO validate that they are at least one period apart
+
+            return null;
 
 
 
@@ -38,7 +40,7 @@ public class RetentionCalc {
         validates the ToDate and fromDate, returns a string describing the problem if invalid
         */
 
-        private String ValiateDate() {
+        private String validateDate() {
 
             // validates that fromDate was entered
             if (this.fromDate == null) {
@@ -113,8 +115,8 @@ public class RetentionCalc {
             Calendar todayDate = fromDate;   
         }
 
-        public String setPeriodLength (int periodLength) {
-            this.periodLength;
+        public void setPeriodLength (int periodLength) {
+            this.periodLength = periodLength;
         }
 
         
