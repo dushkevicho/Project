@@ -5,20 +5,73 @@ import java.util.Calendar;
 
 public class RetentionCalc {
 
+        
         private ArrayList<Client> validClients = new ArrayList<>();
         private Calendar fromDate = null;       // if null do all data availible for contractor
         private Calendar toDate = null;         // if null do all data availible for contractor
         private Calendar earliestDate = null;    //calculated from validClients
         private Calendar latestDate = null;     //calculated from validClients
+        private Calendar todaysDate = null;
         private int daysSinceLastSessionMax = 30; //days since last session to be considered active
-        private int startOfWeek = 0;        // 0 is sunday for now
+        private int startOfWeek = 1;        // 1 is sunday as default
         private int periodLength = 1;       // default is a period of 1 week
         private int minSessionsForRetained = 0; // number of sessions
         private int CalculatedPeriods = 0;   // needs to calculate to at least 1 period
 
+        
+        public String ValidateOptions(){
+            
+            
+            
+            if (ValiateToDate() != null) {
+                return ValiateDate();
+            } 
+
+            //TODO validate that they are at least one period apart
+
+
+
+        }
+
+
+        /**
+        validates the ToDate and fromDate, returns a string describing the problem if invalid
+        */
+
+        private String ValiateDate() {
+
+            // validates that fromDate was entered
+            if (this.fromDate == null) {
+                return "No from date entered";
+            }
+
+            // validates that toDate was entered
+            if (this.toDate == null) {
+                return "No to date entered";
+            }
+
+            // valiadtaes that toDate is before today 
+            if (this.toDate.compareTo(this.todaysDate) > 0 ) {
+                return "To date in the future, must be before today";
+            }
+
+            // valiadtaes that fromDate is before today 
+            if (this.fromDate.compareTo(this.todaysDate) > 0 ) {
+                return "To date in the future, must be before today";
+            }
+            
+
+            if (this.fromDate.compareTo(this.toDate) > 0) {
+                return "From date cannot be after to date";
+            } 
+
+            return null;
+        }
+
         public RetentionCalc(Contractor contractor) {
             processValidClients(contractor);
-        }
+            this.todaysDate = Calendar.getInstance();
+        }    
 
         // TODO add first session date and last session date in Client
 
@@ -41,42 +94,36 @@ public class RetentionCalc {
                 }
 
                 //TODO add set earliestDate/latestDate here
+
                 validClients.add(client);
 
             }
 
         }
 
-        /* this method sets FromDate and validates it return an error string if invalid
-         * othewise returns a null*/
-        public String setFromDate(Calendar fromDate) {
-            Calendar todayDate = Calendar.getInstance();
-
-            if (fromDate.compareTo(todayDate) > 0 ) {
-                return "From date in the future, must be before today";
-            } else if (toDate != null && fromDate.compareTo(toDate) > 0) {
-                return "From date after toDate";
-            }
-
-            this.fromDate = fromDate;
-            return null;
-
-        }
+        
 
         /* this method sets toDate and validates it return an error string if invalid
          * othewise returns a null*/
-        public String setToDate(Calendar toDate) {
-            Calendar todayDate = Calendar.getInstance();
-
-            if (toDate.compareTo(todayDate) > 0 ) {
-                return "To date in the future, must be before today";
-            } else if (fromDate != null && fromDate.compareTo(toDate) > 0) {
-                return "From date cannot be after to date";
-            }
-
+        public void setToDate(Calendar toDate) {
             this.toDate = toDate;
-            return null;
+        }
 
+        public void setFromDate(Calendar fromDate) {
+            Calendar todayDate = fromDate;   
+        }
+
+        public String setPeriodLength (int periodLength) {
+            this.periodLength;
+        }
+
+        
+        void setStartofWeek(int startOfWeek) {
+            this.startOfWeek = startOfWeek;
+        }
+
+        void setDaysSinceLastSessionMax(int daysSinceLastSessionMax) {
+            this.daysSinceLastSessionMax = daysSinceLastSessionMax;
         }
 }
 
