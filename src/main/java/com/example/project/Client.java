@@ -1,5 +1,6 @@
 package com.example.project;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -16,6 +17,7 @@ public class Client {
     private int cancelledFutureSession = 0;
     private int lateCancel = 0;
     private int noShow = 0;
+    //SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd MMM HH:mm");
 
     
     public Client(int clientID) {
@@ -32,16 +34,20 @@ public class Client {
         if (clientSession.getSessionType().equals("session")) {
             this.clientSessions.add(clientSession);
 
+            //System.out.println("clientSession date: " + format1.format(clientSession.getDateTime().getTime()));
             // initializes the earliestDate and latestDate
             if (earliestDate == null) {
-                earliestDate = clientSession.getDateTime;
-                latestDate = clientSession.getDateTime;
+                earliestDate = clientSession.getDateTime();
+                latestDate = clientSession.getDateTime();
             } else {
                 // set the date time
-                if (clientSession.getDateTime.compareTo(earliestDate) > 0) {
-                    earliestDate = clientSession.getDateTime;
-                } else if (clientSession.getDateTime.compareTo(latestDate) < 0) {
-                    latestDate = clientSession.getDateTime;
+                if (clientSession.getDateTime().compareTo(earliestDate) < 0) {
+
+                    earliestDate = clientSession.getDateTime();
+                } else if (clientSession.getDateTime().compareTo(latestDate) > 0) {
+                    latestDate = clientSession.getDateTime();
+
+
                 }
             }
 
@@ -122,11 +128,11 @@ public class Client {
         return noShow;
     }
 
-    public Calendar geteEarliestDate() {
+    public Calendar getEarliestDate() {
         return earliestDate;
     }
 
-    public Calendar geteLatestDate() {
+    public Calendar getLatestDate() {
         return latestDate;
     }
 }
