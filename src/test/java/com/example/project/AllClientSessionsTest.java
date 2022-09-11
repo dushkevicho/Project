@@ -177,9 +177,11 @@ class AllClientSessionsTest {
         assertNull(client3);
     }
     /**
-     * this test tests the date and counters inside of */
+     * tests the date and counters inside of
+     *
+     */
     @Test
-    void testClient() {
+    void testClientCounters() {
         GetDataDAO getDataDAO = new CsvGetDataDAO();
         AllClientSessions allClientSessions = getDataDAO.getAllData(test4Filepath);
 
@@ -207,7 +209,9 @@ class AllClientSessionsTest {
         assertEquals(1, client1.getAttendedSessions());
         assertEquals(2, client1.getCancelledSession());
         assertEquals(2, client1.getNoShow());
-        assertEquals(4, client1.getFutureSessions());
+        assertEquals(3, client1.getFutureSessions());
+        assertEquals(1, client1.getCancelledFutureSession());
+
         //test earliestDate
         assertEquals(00,earliestDate1.get(Calendar.MONTH));
         assertEquals(16,earliestDate1.get(Calendar.DATE));
@@ -223,15 +227,17 @@ class AllClientSessionsTest {
         assertEquals(54,latestDate1.get(Calendar.MINUTE));
 
 
-        Client Client2 = allClientSessions.getClientFromContractor("contractor name 582", 1513);
-        Calendar earliestDate2 = Client2.getEarliestDate();
-        Calendar latestDate2 = Client2.getLatestDate();
+        Client client2 = allClientSessions.getClientFromContractor("contractor name 582", 1513);
+        Calendar earliestDate2 = client2.getEarliestDate();
+        Calendar latestDate2 = client2.getLatestDate();
 
-        assertEquals(9, Client2.getClientSessionsSize());
-        assertEquals(8, Client2.getAttendedSessions());
-        assertEquals(0, Client2.getCancelledSession());
-        assertEquals(0, Client2.getNoShow());
-        assertEquals(1, Client2.getFutureSessions());
+        assertEquals(9, client2.getClientSessionsSize());
+        assertEquals(8, client2.getAttendedSessions());
+        assertEquals(0, client2.getCancelledSession());
+        assertEquals(0, client2.getNoShow());
+        assertEquals(1, client2.getFutureSessions());
+        assertEquals(0, client2.getCancelledFutureSession());
+
         //test earliestDate
         assertEquals(00,earliestDate2.get(Calendar.MONTH));
         assertEquals(8,earliestDate2.get(Calendar.DATE));

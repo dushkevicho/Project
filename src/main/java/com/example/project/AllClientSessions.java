@@ -51,8 +51,12 @@ public class AllClientSessions {
             addToContractor(currentClientSession);
         }
     }
-    /* adds the ClientSession to the sortedContractorAllSessions Array list,
-    * adds it to the correct contractor*/
+
+    /**
+     * adds the ClientSession to the sortedContractorAllSessions ArrayList,
+     * adds it to the correct contractor and client
+     * @param clientSession
+     */
     private void addToContractor(ClientSession clientSession) {
         String contractorName = clientSession.getContractorName();
         int indexOfContractor = indexOfContractor(contractorName);
@@ -69,7 +73,11 @@ public class AllClientSessions {
 
     }
 
-    /* returns the array position of a contractor returns -1 if no match is found*/
+    /**
+     * returns the array position of a contractor returns -1 if no match is found
+     * @param contractorName String of contractor name to search for
+     * @return the array position if found or -1 if not found
+     */
     private int indexOfContractor(String contractorName) {
 
         int arrayPosition = -1;
