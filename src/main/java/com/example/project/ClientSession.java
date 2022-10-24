@@ -374,20 +374,21 @@ public class ClientSession {
                 return this;
             }
             String[] dateTimeNew = dateTime.split(" ");
-            String[] date = dateTimeNew[0].split("/");
-            String[] time = dateTimeNew[
-                    1].split(":");
+            String[] date = dateTimeNew[0].split("/|-");
+            String[] time = dateTimeNew[1].split(":");
 
-            this.dateTime.set(Calendar.MONTH, Integer.parseInt(date[0])-1);
-            this.dateTime.set(Calendar.DATE, Integer.parseInt(date[1]));
+            int month = Integer.parseInt(date[1])-1;
+            this.dateTime.set(Calendar.MONTH, month);
+            int day = Integer.parseInt(date[2]);
+            this.dateTime.set(Calendar.DATE, day);
 
+            int year = Integer.parseInt(date[0]);
             // if the year shows up as 2 digits
-            if ( Integer.parseInt(date[2]) >= 0
-                    && Integer.parseInt(date[2]) < 100) {
-                this.dateTime.set(Calendar.YEAR, Integer.parseInt(date[2])+2000);
+            if ( year >= 0 && year < 100) {
+                this.dateTime.set(Calendar.YEAR, year + 2000);
 
             } else {
-                this.dateTime.set(Calendar.YEAR, Integer.parseInt(date[2]));
+                this.dateTime.set(Calendar.YEAR, Integer.parseInt(date[0]));
             }
 
 
@@ -396,7 +397,9 @@ public class ClientSession {
             // override to 0 due to .getInstance();
             this.dateTime.set(Calendar.MILLISECOND, 0);
 
-            // System.out.println(this.dateTime.getTime());
+            // this sets the date needs to get called to fix cux it's a bug
+            this.dateTime.getTime();
+            //System.out.println(this.dateTime.getTime());
             return this;
         }
 

@@ -19,6 +19,8 @@ public class Client {
     private int noShow = 0;
     //SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd MMM HH:mm");
 
+    // TODO calc last attended date
+
     
     public Client(int clientID) {
         this.clientID = clientID;
@@ -30,24 +32,23 @@ public class Client {
 
         //TODO may need to figure out other charges
 
+
         // adds the clientSession to the correct list
         if (clientSession.getSessionType().equals("session")) {
             this.clientSessions.add(clientSession);
 
             //System.out.println("clientSession date: " + format1.format(clientSession.getDateTime().getTime()));
-            // initializes the earliestDate and latestDate
+            // initializes the earliestDate and latestDate, same date with first time
             if (earliestDate == null) {
-                earliestDate = clientSession.getDateTime();
-                latestDate = clientSession.getDateTime();
+                earliestDate = (Calendar) clientSession.getDateTime().clone();
+                latestDate = (Calendar) clientSession.getDateTime().clone();
             } else {
                 // set the date time
                 if (clientSession.getDateTime().compareTo(earliestDate) < 0) {
+                    earliestDate = (Calendar) clientSession.getDateTime().clone();
 
-                    earliestDate = clientSession.getDateTime();
                 } else if (clientSession.getDateTime().compareTo(latestDate) > 0) {
-                    latestDate = clientSession.getDateTime();
-
-
+                    latestDate = (Calendar) clientSession.getDateTime().clone();
                 }
             }
 

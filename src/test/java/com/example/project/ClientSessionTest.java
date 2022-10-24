@@ -36,13 +36,13 @@ class ClientSessionTest {
     String taxPaid1 = "5";
     String invoiceId1 = "88";
     String sessionId1 = "9876";
-    String dateTime1 = "2/27/2022 11:00:00";
+    String dateTime1 = "2022-02-27 11:00";
     String dateTime1Print = "2/27/2022  11:00:00 AM";
     int day1 = 27;
     int month1 = 2;
     int year1 = 2022;
     int hour1 = 11;
-    String dateTime2 = "1/13/2022 15:00:00";
+    String dateTime2 = "2022-01-13 15:00";
     String dateTime2Print = "1/13/2022  3:00:00 PM";
     int day2 = 13;
     int month2 = 1;

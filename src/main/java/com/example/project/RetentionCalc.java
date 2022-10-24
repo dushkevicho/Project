@@ -6,8 +6,8 @@ import java.util.concurrent.TimeUnit;
 
 public class RetentionCalc {
 
-    private ArrayList<Client> validClients = new ArrayList<>();
-    ArrayList<Client> tempClientList = new ArrayList<>();
+    private ArrayList<Client> validClients;
+    ArrayList<Client> fullClientList = new ArrayList<>();
     private int MAX_PERIODS = 10;           // hardcoded maximum number of periods
     private Calendar fromDate = null;       // if null do all data available for contractor
     private Calendar fromDatePeriod = null;
@@ -21,7 +21,7 @@ public class RetentionCalc {
     private int periodLength = 1;       // default is a period of 1 week
     private int minSessionsForRetained = 2; // number of sessions
     private int calculatedPeriods = 0;   // needs to calculate to at least 1 period
-    private ArrayList<Period> periods = new ArrayList<>();
+    private ArrayList<Period> periods = new ArrayList<>(); // the list of periods
 
 
 
@@ -31,10 +31,8 @@ public class RetentionCalc {
      */
     public RetentionCalc(Contractor contractor) {
         todayDate = Calendar.getInstance();
-        tempClientList = contractor.getClientList();
-
+        fullClientList = contractor.getClientList();
     }
-
 
 
     /**
@@ -55,10 +53,14 @@ public class RetentionCalc {
             return periodIntervalCalculatorError;
         }
 
+        processValidClients();
+
+        createPeriods();
+
+
 
         return null;
     }
-
 
 
     /**
@@ -72,7 +74,7 @@ public class RetentionCalc {
         int dayOfWeek = fromDate.get(Calendar.DAY_OF_WEEK);
         int deltaDays = startOfWeek - dayOfWeek;
         fromDatePeriod = (Calendar) fromDate.clone();
-        fromDatePeriod.add(Calendar.DAY_OF_MONTH, deltaDays);
+        fromDatePeriod.add(Calendar.DATE, deltaDays);
 
         // since from date is  00:00:000 and toDate is 23:59:999 adds a millisecond to make it a full day
         long Seconds = TimeUnit.MILLISECONDS.toSeconds(Math.abs(fromDatePeriod.getTimeInMillis() - toDate.getTimeInMillis())) + 1;
@@ -80,25 +82,21 @@ public class RetentionCalc {
         int days = (int) Seconds / 60 / 60 / 24;
         //System.out.println(days);
 
-        // this rounds down so that the last period isn't a partial week
+        // this always rounds down so that the last period isn't a partial week
         calculatedPeriods = (days) / (7 * periodLength);
 
         if ( calculatedPeriods == 0 ) {
             return "to date and from date do not give enough time for at least 1 period";
         }
+
+        // Calculates the last day of the periods
         toDatePeriod = (Calendar) fromDatePeriod.clone();
-
-
-        // TODO create the periods here
-        for (int i = 0; i < calculatedPeriods; i++) {
-            // System.out.println(toDatePeriod.getTime());
-            toDatePeriod.add(Calendar.DATE, periodLength * 7);
-        }
+        int totalDaysPeriods = calculatedPeriods * 7* periodLength;
+        toDatePeriod.add(Calendar.DATE,totalDaysPeriods);
+        toDatePeriod.add(Calendar.MILLISECOND,-1);
 
         return null;
     }
-    
-    
 
 
 
@@ -107,12 +105,12 @@ public class RetentionCalc {
      * this function creates the arrayList of periods
      */
     private void createPeriods() {
-
+        //TODO
         Calendar startDayPeriod = (Calendar) fromDatePeriod.clone();
-
-            for (int i = 0; i < calculatedPeriods; i++) {
-                periods.add(new Period(i, startDayPeriod));
-            }
+        for (int i = 0; i < calculatedPeriods; i++) {
+            periods.add(new Period(startDayPeriod, periodLength));
+            startDayPeriod.add(Calendar.DATE,periodLength * 7);
+        }
     }
 
 
@@ -158,38 +156,46 @@ public class RetentionCalc {
     /**
      *  this method will process the Contractor and extract all the valid clients
      * into a new tempClientList
+     * @return string of any errors
      */
-    private void processValidClients(Contractor contractor) {
-        ArrayList<Client> tempClientList = contractor.getClientList();
+    private String processValidClients() {
 
-        int tempClientListSize = tempClientList.size();
+        validClients = new ArrayList<>();
+
+        int tempClientListSize = fullClientList.size();
 
         Client client;
         // iterate through all the clients and only include ones that are valid
         for (int i = 0; i < tempClientListSize; i++ ) {
-            client = tempClientList.get(i);
-
-
+            client = fullClientList.get(i);
 
             // if client has no attended session, not included in calculations
             if (client.getAttendedSessions() == 0 ) {
                 continue;
             }
 
-            //TODO add set earliestDate/latestDate here
+            // if first appointment falls before the first period skip
+            if (client.getEarliestDate().compareTo(fromDatePeriod) < 0 ) {
+                continue;
+            }
+
+            // if first appointment falls after the last period
+            if (client.getEarliestDate().compareTo(toDatePeriod) > 0 ) {
+                continue;
+            }
 
             validClients.add(client);
 
         }
+
+        return null;
+
 
     }
 
 
 
     // TODO add first session date and last session date in Client
-
-
-
 
     /* this method sets toDate and validates it return an error string if invalid
      * otherwise returns a null*/
@@ -198,6 +204,7 @@ public class RetentionCalc {
         this.toDate.set(year, month, day, 23, 59);
         this.toDate.set(Calendar.SECOND, 59);
         this.toDate.set(Calendar.MILLISECOND, 999);
+        this.toDate.getTime();
     }
 
     public void setFromDate(int day, int month, int year) {
@@ -205,6 +212,7 @@ public class RetentionCalc {
         this.fromDate.set(year, month, day, 00, 00);
         this.fromDate.set(Calendar.SECOND, 0);
         this.fromDate.set(Calendar.MILLISECOND, 0);
+        this.fromDate.getTime();
     }
 
     public void setPeriodLength (int periodLength) {
@@ -227,45 +235,16 @@ public class RetentionCalc {
     public Calendar getFromDatePeriod() {
         return fromDatePeriod;
     }
-
-    private class Period {
-        int periodNumber;
-        Calendar periodStartDate;
-        Calendar periodEndDate;
-        int newClients = 0;
-        int retainedClients = 0;
-        int retainedPercentage = 0;
-
-
-
-        public Period (int periodNumber, Calendar periodStart) {
-            this.periodNumber = periodNumber;
-            periodStartDate = (Calendar) periodStart.clone();
-            periodEndDate = (Calendar) periodStart.clone();
-            periodEndDate.roll(Calendar.DATE, 7 * periodLength);
-        }
-
-        public void setPeriodStartDate(Calendar periodStartDate) {
-            this.periodStartDate = periodStartDate;
-        }
-
-        public void setPeriodEndDate(Calendar periodEndDate) {
-            this.periodEndDate = periodEndDate;
-        }
-
-        public void addNewClients() {
-            newClients++;
-        }
-
-        public void addRetainedClients() {
-            retainedClients++;
-            calculatePercent();
-        }
-
-        private void calculatePercent() {
-            retainedPercentage = (int) 100 * retainedClients / newClients;
-        }
+    public Calendar getToDatePeriod() {
+        return toDatePeriod;
     }
+    public ArrayList<Client> getValidClients(){return validClients;}
+
+    public ArrayList<Period> getPeriods(){return  periods;}
+
+
+
+
 
 
 

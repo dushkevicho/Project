@@ -252,9 +252,8 @@ class AllClientSessionsTest {
         assertEquals(2,latestDate2.get(Calendar.HOUR_OF_DAY));
         assertEquals(51,latestDate2.get(Calendar.MINUTE));
 
-
-
-
     }
+
+
 
 }
