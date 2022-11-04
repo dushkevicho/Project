@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.*?>
+<?import javafx.scene.chart.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.project.HelloController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.project.HelloController">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
@@ -32,44 +33,37 @@
          <children>
             <Label fx:id="fileName" text="Press file -&gt; open to start" wrapText="true">
                <padding>
-                  <Insets left="10.0" top="10.0" />
+                  <Insets left="10.0" top="5.0" />
                </padding>
             </Label>
             <Label fx:id="retentionSettingsTextBox" text="Retention Settings">
                <VBox.margin>
-                  <Insets left="5.0" top="10.0" />
+                  <Insets left="5.0" top="5.0" />
                </VBox.margin>
             </Label>
             <DatePicker fx:id="retentionFromDateDatePicker" promptText="From Date">
                <VBox.margin>
-                  <Insets left="5.0" right="5.0" top="10.0" />
+                  <Insets left="5.0" right="5.0" top="5.0" />
                </VBox.margin>
             </DatePicker>
             <DatePicker fx:id="retentionToDateDatePicker" promptText="To Date">
                <VBox.margin>
-                  <Insets left="5.0" right="5.0" top="10.0" />
+                  <Insets left="5.0" right="5.0" top="5.0" />
                </VBox.margin>
             </DatePicker>
-            <HBox prefHeight="100.0" prefWidth="200.0">
-               <children>
-                  <ComboBox fx:id="retentionContractorNamesComboBox" prefHeight="25.0" prefWidth="122.0" promptText="Select Contractor">
-                     <HBox.margin>
-                        <Insets />
-                     </HBox.margin>
-                  </ComboBox>
-                  <Button fx:id="addButton" mnemonicParsing="false" onAction="#onAddButtonClick" prefHeight="25.0" prefWidth="47.0" text="Add" wrapText="true">
-                     <HBox.margin>
-                        <Insets left="5.0" right="5.0" />
-                     </HBox.margin>
-                  </Button>
-               </children>
+            <ComboBox fx:id="retentionContractorNamesComboBox" onAction="#onSelectContractorClick" prefHeight="25.0" promptText="Select Contractor">
                <VBox.margin>
-                  <Insets left="5.0" right="5.0" top="10.0" />
+                  <Insets left="5.0" top="5.0" />
                </VBox.margin>
-            </HBox>
+            </ComboBox>
+            <Button fx:id="clearButton" mnemonicParsing="false" onAction="#onClickClearButton" text="Clear Contractors">
+               <VBox.margin>
+                  <Insets left="5.0" top="5.0" />
+               </VBox.margin>
+            </Button>
             <Label fx:id="spinnerLabel" text="Max days since last session:">
                <VBox.margin>
-                  <Insets left="5.0" top="10.0" />
+                  <Insets left="5.0" top="5.0" />
                </VBox.margin>
             </Label>
             <Spinner fx:id="retentionDaysSinceLastDaySpinner">
@@ -79,7 +73,7 @@
             </Spinner>
             <Label fx:id="RetentionWeeksLabel" text="Weeks Per Period:">
                <VBox.margin>
-                  <Insets left="5.0" top="10.0" />
+                  <Insets left="5.0" top="5.0" />
                </VBox.margin>
             </Label>
             <Spinner fx:id="retentionWeeksPeriodSpinner">
@@ -87,54 +81,59 @@
                   <Insets left="5.0" top="2.0" />
                </VBox.margin>
             </Spinner>
+            <Label fx:id="minimumSessionsLabel" text="Minimum sessions:">
+               <VBox.margin>
+                  <Insets left="5.0" top="5.0" />
+               </VBox.margin>
+            </Label>
+            <Spinner fx:id="MinSessionSpinner">
+               <VBox.margin>
+                  <Insets left="5.0" top="2.0" />
+               </VBox.margin>
+            </Spinner>
+            <Label text="Retention Distribution">
+               <VBox.margin>
+                  <Insets left="5.0" top="5.0" />
+               </VBox.margin>
+            </Label>
+            <Spinner fx:id="maxDistributionSpinner" layoutX="15.0" layoutY="296.0">
+               <VBox.margin>
+                  <Insets left="5.0" top="2.0" />
+               </VBox.margin>
+            </Spinner>
+            <CheckBox fx:id="couplesDeleteCheckBox" mnemonicParsing="false" text="Couples Delete">
+               <VBox.margin>
+                  <Insets left="5.0" top="5.0" />
+               </VBox.margin>
+            </CheckBox>
+            <CheckBox fx:id="calculateAtrittionCheckBox" mnemonicParsing="false" onAction="#onCalculateAttrition" text="Calculate Attrition ">
+               <padding>
+                  <Insets left="5.0" top="5.0" />
+               </padding>
+            </CheckBox>
+            <CheckBox fx:id="clinicAverageCheckBox" mnemonicParsing="false" onAction="#onClinicAverage" text="Clinic Average">
+               <VBox.margin>
+                  <Insets left="5.0" top="5.0" />
+               </VBox.margin>
+            </CheckBox>
             <Button fx:id="calculateRetentionButton" mnemonicParsing="false" onAction="#clickCalculateRetentionButton" text="Calculate Retention">
                <VBox.margin>
-                  <Insets left="5.0" right="5.0" top="10.0" />
+                  <Insets left="5.0" right="5.0" top="5.0" />
                </VBox.margin>
             </Button>
             <Separator fx:id="settingsSeparator" prefWidth="200.0">
                <VBox.margin>
-                  <Insets top="10.0" />
+                  <Insets top="5.0" />
                </VBox.margin>
             </Separator>
+            <Label text="Total New Clients" />
+            <Label text="Label" />
+            <Label text="Label" />
             <Label fx:id="payrollSettingsTextBox" text="Payroll Settings">
                <VBox.margin>
-                  <Insets left="5.0" top="10.0" />
+                  <Insets left="5.0" />
                </VBox.margin>
             </Label>
-            <ComboBox fx:id="payrollContractorNamesComboBox" layoutX="15.0" layoutY="144.0" prefWidth="150.0" promptText="Select Contractor">
-               <VBox.margin>
-                  <Insets left="5.0" right="5.0" top="10.0" />
-               </VBox.margin>
-            </ComboBox>
-             <DatePicker fx:id="fromDatePayrollDatePicker" promptText="From Date">
-                 <VBox.margin>
-                     <Insets left="5.0" right="5.0" top="10.0" />
-                 </VBox.margin>
-             </DatePicker>
-             <DatePicker fx:id="toDateDatePayrollPicker" promptText="To Date">
-                 <VBox.margin>
-                     <Insets left="5.0" right="5.0" top="10.0" />
-                 </VBox.margin>
-             </DatePicker>
-             <TextField fx:id="sessionPercentTextField" promptText="Session %">
-               <VBox.margin>
-                  <Insets left="5.0" right="5.0" top="10.0" />
-               </VBox.margin>
-            </TextField>
-            <TextField fx:id="reportPercentTextField" promptText="Report %">
-               <VBox.margin>
-                  <Insets left="5.0" right="5.0" top="10.0" />
-               </VBox.margin>
-            </TextField>
-            <Button fx:id="calculatePayrollButton" mnemonicParsing="false" onAction="#clickCalculatePayrollButton" text="Calculate Payroll">
-               <VBox.margin>
-                  <Insets left="5.0" top="10.0" />
-               </VBox.margin>
-               <graphic>
-                  <ChoiceBox prefWidth="150.0" />
-               </graphic>
-            </Button>
          </children>
          <BorderPane.margin>
             <Insets left="5.0" right="5.0" top="10.0" />
@@ -145,6 +144,22 @@
       <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
          <children>
             <Label fx:id="SelectedContractors" text="Selected Contractors: " wrapText="true" />
+            <LineChart fx:id="retentionChart">
+              <xAxis>
+                <CategoryAxis side="BOTTOM" />
+              </xAxis>
+              <yAxis>
+                <NumberAxis side="LEFT" />
+              </yAxis>
+            </LineChart>
+            <BarChart fx:id="clientRetentionDistributionBarChart">
+              <xAxis>
+                <CategoryAxis side="BOTTOM" />
+              </xAxis>
+              <yAxis>
+                <NumberAxis side="LEFT" />
+              </yAxis>
+            </BarChart>
          </children>
       </VBox>
    </center>

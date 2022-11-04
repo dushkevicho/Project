@@ -190,18 +190,24 @@ class RetentionCalcTest {
 
         ArrayList<Period> periods = retention582.getPeriods();
         assertNotNull(periods);
-        assertEquals(8 ,periods.get(0).periodStartDate.get(Calendar.DATE));
-        assertEquals(Calendar.APRIL ,periods.get(0).periodStartDate.get(Calendar.MONTH));
-        assertEquals(2021 ,periods.get(0).periodStartDate.get(Calendar.YEAR));
+        assertEquals(8 ,periods.get(0).getPeriodStartDate().get(Calendar.DATE));
+        assertEquals(Calendar.APRIL ,periods.get(0).getPeriodStartDate().get(Calendar.MONTH));
+        assertEquals(2021 ,periods.get(0).getPeriodStartDate().get(Calendar.YEAR));
 
 
 
-        List<Integer> listOfDays= Arrays.asList(8,29,20,10, 1,22,12);
+        List<Integer> listOfStartDays= Arrays.asList(8,29,20,10, 1,22,12);
+        List<Integer> listOfEndDays= Arrays.asList(28,19,9, 30,21,11,18);
 
-        for (int i = 0; i < 6; i++) {
-            int dayExpected = listOfDays.get(i);
-            int dayCalculated = periods.get(i).periodStartDate.get(Calendar.DATE);
-            assertEquals(dayExpected ,dayCalculated);
+        for (int i = 0; i < 3; i++) {
+            int startDayExpected = listOfStartDays.get(i);
+            int endDayExpected = listOfEndDays.get(i);
+
+            int startDayCalculated = periods.get(i).getPeriodStartDate().get(Calendar.DATE);
+            int endDayCalculated = periods.get(i).getPeriodEndDate().get(Calendar.DATE);
+
+            assertEquals(startDayExpected ,startDayCalculated);
+            assertEquals(endDayExpected ,endDayCalculated);
         }
 
 
@@ -218,10 +224,13 @@ class RetentionCalcTest {
         Contractor contractor582 = allClientSessions.getContractorFromName("contractor name 1");
         RetentionCalc retention582 = new RetentionCalc(contractor582);
 
+        // set the calculator parameters
         retention582.setFromDate(7, Calendar.OCTOBER, 2021);
         retention582.setToDate(28, Calendar.OCTOBER, 2021);
         retention582.setPeriodLength(1);
         retention582.setStartOfWeek(Calendar.MONDAY);
+        retention582.setDaysSinceLastSessionMax(30);
+        retention582.setMinSessionsForRetained(2);
         String error1 = retention582.calculateParameters();
         assertNull(error1);
         assertEquals(4, retention582.getFromDatePeriod().get(Calendar.DATE));
@@ -229,23 +238,239 @@ class RetentionCalcTest {
 
         ArrayList<Period> periods = retention582.getPeriods();
         assertNotNull(periods);
-        assertEquals(4 ,periods.get(0).periodStartDate.get(Calendar.DATE));
-        assertEquals(Calendar.OCTOBER ,periods.get(0).periodStartDate.get(Calendar.MONTH));
-        assertEquals(2021 ,periods.get(0).periodStartDate.get(Calendar.YEAR));
+        assertEquals(4 ,periods.get(0).getPeriodStartDate().get(Calendar.DATE));
+        assertEquals(Calendar.OCTOBER ,periods.get(0).getPeriodStartDate().get(Calendar.MONTH));
+        assertEquals(2021 ,periods.get(0).getPeriodStartDate().get(Calendar.YEAR));
 
+        // test all periods have correct parameters
         assertEquals(3 ,periods.size());
 
+        // test start and end dates of each period
+        List<Integer> listOfStartDays= Arrays.asList(4, 11, 18);
+        List<Integer> listOfEndDays= Arrays.asList(10, 17, 24);
 
+        // test retained data
+        List<Integer> listOfNewClients= Arrays.asList(7, 2, 0);
+        List<Integer> listOfRetained= Arrays.asList(6, 2, 0);
+        List<Integer> listOfPercentageRetained= Arrays.asList(85, 100, -1);
 
-        List<Integer> listOfDays= Arrays.asList(4, 11, 18);
+        assertEquals(listOfPercentageRetained, retention582.getPeriodPercentages());
 
         for (int i = 0; i < 3; i++) {
-            int dayExpected = listOfDays.get(i);
-            int dayCalculated = periods.get(i).periodStartDate.get(Calendar.DATE);
-            assertEquals(dayExpected ,dayCalculated);
+            // test the dates
+            int startDayExpected = listOfStartDays.get(i);
+            int endDayExpected = listOfEndDays.get(i);
+
+            int startDayCalculated = periods.get(i).getPeriodStartDate().get(Calendar.DATE);
+            int endDayCalculated = periods.get(i).getPeriodEndDate().get(Calendar.DATE);
+
+            assertEquals(startDayExpected ,startDayCalculated);
+            assertEquals(endDayExpected ,endDayCalculated);
+
+            // test the retained
+            int newClientsExpected = listOfNewClients.get(i);
+            int retainedExpected = listOfRetained.get(i);
+            int percentageRetainedExpected = listOfPercentageRetained.get(i);
+
+            int newClientsCalculated = periods.get(i).getNewClients();
+            int retainedCalculated = periods.get(i).getRetainedClients();
+            int percentageRetainedCalculated = periods.get(i).getRetainedPercentage();
+
+            assertEquals(newClientsExpected, newClientsCalculated);
+            assertEquals(retainedExpected, retainedCalculated);
+            assertEquals(percentageRetainedExpected, percentageRetainedCalculated);
+
+        }
+
+        // change MinSessionsForRetained parameters to 3
+        retention582.setMinSessionsForRetained(3);
+
+
+        // recalculate the parameters
+        error1 = retention582.calculateParameters();
+        assertNull(error1);
+
+        periods = retention582.getPeriods();
+
+        // test all periods have correct parameters
+        assertEquals(3 ,periods.size());
+
+        // test start and end dates of each period
+        listOfStartDays= Arrays.asList(4, 11, 18);
+        listOfEndDays= Arrays.asList(10, 17, 24);
+
+        // test retained data
+        listOfNewClients= Arrays.asList(7, 2, 0);
+        listOfRetained= Arrays.asList(5, 2, 0);
+        listOfPercentageRetained= Arrays.asList(71, 100, -1);
+
+        assertEquals(listOfPercentageRetained, retention582.getPeriodPercentages());
+
+        for (int i = 0; i < 3; i++) {
+            // test the dates
+            int startDayExpected = listOfStartDays.get(i);
+            int endDayExpected = listOfEndDays.get(i);
+
+            int startDayCalculated = periods.get(i).getPeriodStartDate().get(Calendar.DATE);
+            int endDayCalculated = periods.get(i).getPeriodEndDate().get(Calendar.DATE);
+
+            assertEquals(startDayExpected ,startDayCalculated);
+            assertEquals(endDayExpected ,endDayCalculated);
+
+            // test the retained
+            int newClientsExpected = listOfNewClients.get(i);
+            int retainedExpected = listOfRetained.get(i);
+            int percentageRetainedExpected = listOfPercentageRetained.get(i);
+
+            int newClientsCalculated = periods.get(i).getNewClients();
+            int retainedCalculated = periods.get(i).getRetainedClients();
+            int percentageRetainedCalculated = periods.get(i).getRetainedPercentage();
+
+            assertEquals(newClientsExpected, newClientsCalculated);
+            assertEquals(retainedExpected, retainedCalculated);
+            assertEquals(percentageRetainedExpected, percentageRetainedCalculated);
+
+        }
+
+        // change MinSessionsForRetained parameters to 4
+        retention582.setMinSessionsForRetained(4);
+
+
+        // recalculate the parameters
+        error1 = retention582.calculateParameters();
+        assertNull(error1);
+        periods = retention582.getPeriods();
+
+        // test all periods have correct parameters
+        assertEquals(3 ,periods.size());
+
+        // test start and end dates of each period
+        listOfStartDays= Arrays.asList(4, 11, 18);
+        listOfEndDays= Arrays.asList(10, 17, 24);
+
+        // test retained data
+        listOfNewClients= Arrays.asList(7, 2, 0);
+        listOfRetained= Arrays.asList(4, 1, 0);
+        listOfPercentageRetained= Arrays.asList(57, 50, -1);
+
+        assertEquals(listOfPercentageRetained, retention582.getPeriodPercentages());
+
+        for (int i = 0; i < 3; i++) {
+            // test the dates
+            int startDayExpected = listOfStartDays.get(i);
+            int endDayExpected = listOfEndDays.get(i);
+
+            int startDayCalculated = periods.get(i).getPeriodStartDate().get(Calendar.DATE);
+            int endDayCalculated = periods.get(i).getPeriodEndDate().get(Calendar.DATE);
+
+            assertEquals(startDayExpected ,startDayCalculated);
+            assertEquals(endDayExpected ,endDayCalculated);
+
+            // test the retained
+            int newClientsExpected = listOfNewClients.get(i);
+            int retainedExpected = listOfRetained.get(i);
+            int percentageRetainedExpected = listOfPercentageRetained.get(i);
+
+            int newClientsCalculated = periods.get(i).getNewClients();
+            int retainedCalculated = periods.get(i).getRetainedClients();
+            int percentageRetainedCalculated = periods.get(i).getRetainedPercentage();
+
+            assertEquals(newClientsExpected, newClientsCalculated);
+            assertEquals(retainedExpected, retainedCalculated);
+            assertEquals(percentageRetainedExpected, percentageRetainedCalculated);
+        }
+
+        // change start day to Sunday
+        retention582.setStartOfWeek(Calendar.SUNDAY);
+
+        // change start week to previous week
+        retention582.setFromDate(1, Calendar.OCTOBER, 2021);
+
+
+        // recalculate the parameters
+        error1 = retention582.calculateParameters();
+        assertNull(error1);
+        periods = retention582.getPeriods();
+
+        // test all periods have correct parameters
+        assertEquals(4 ,periods.size());
+
+        // test start and end dates of each period
+        listOfStartDays= Arrays.asList(26, 3, 10, 17);
+        listOfEndDays= Arrays.asList(2, 9, 16,23);
+
+        // test retained data
+        listOfNewClients= Arrays.asList(1, 6, 3, 0);
+        listOfRetained= Arrays.asList(1, 3, 2, 0);
+        listOfPercentageRetained= Arrays.asList(100, 50, 66, -1);
+
+        assertEquals(listOfPercentageRetained, retention582.getPeriodPercentages());
+
+        for (int i = 0; i < 3; i++) {
+            // test the dates
+            int startDayExpected = listOfStartDays.get(i);
+            int endDayExpected = listOfEndDays.get(i);
+
+            int startDayCalculated = periods.get(i).getPeriodStartDate().get(Calendar.DATE);
+            int endDayCalculated = periods.get(i).getPeriodEndDate().get(Calendar.DATE);
+
+            assertEquals(startDayExpected ,startDayCalculated);
+            assertEquals(endDayExpected ,endDayCalculated);
+
+            // test the retained
+            int newClientsExpected = listOfNewClients.get(i);
+            int retainedExpected = listOfRetained.get(i);
+            int percentageRetainedExpected = listOfPercentageRetained.get(i);
+
+            int newClientsCalculated = periods.get(i).getNewClients();
+            int retainedCalculated = periods.get(i).getRetainedClients();
+            int percentageRetainedCalculated = periods.get(i).getRetainedPercentage();
+
+            assertEquals(newClientsExpected, newClientsCalculated);
+            assertEquals(retainedExpected, retainedCalculated);
+            assertEquals(percentageRetainedExpected, percentageRetainedCalculated);
+        }
+
+    }
+
+    @Test
+    void testRetentionDistribution() {
+
+
+        GetDataDAO getDataDAO = new CsvGetDataDAO();
+        AllClientSessions allClientSessions = getDataDAO.getAllData(test5Filepath);
+
+        // sort the data
+        allClientSessions.SortRaw();
+
+        Contractor contractor582 = allClientSessions.getContractorFromName("contractor name 1");
+        RetentionCalc retention582 = new RetentionCalc(contractor582);
+
+        // set the calculator parameters
+        retention582.setFromDate(7, Calendar.OCTOBER, 2021);
+        retention582.setToDate(28, Calendar.OCTOBER, 2021);
+        retention582.setPeriodLength(1);
+        retention582.setStartOfWeek(Calendar.MONDAY);
+        retention582.setDaysSinceLastSessionMax(30);
+        retention582.setMinSessionsForRetained(2);
+        retention582.setMaxCount(5);
+        String error1 = retention582.calculateParameters();
+        assertNull(error1);
+
+        List<Integer> calculatedRetentionDistribution = retention582.getRetentionDistribution("NA");
+        List<Integer> ExpectedRetentionDistribution = Arrays.asList(0,11,11,22,22,33);
+
+        for (int i = 1; i < 6; i++) {
+
+            assertEquals(ExpectedRetentionDistribution.get(i), calculatedRetentionDistribution.get(i));
         }
 
 
     }
 
+
 }
+
+
+
+

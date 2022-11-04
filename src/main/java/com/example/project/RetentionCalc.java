@@ -1,5 +1,6 @@
 package com.example.project;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
@@ -8,7 +9,7 @@ public class RetentionCalc {
 
     private ArrayList<Client> validClients;
     ArrayList<Client> fullClientList = new ArrayList<>();
-    private int MAX_PERIODS = 10;           // hardcoded maximum number of periods
+    //private int MAX_PERIODS = 10;           // hardcoded maximum number of periods
     private Calendar fromDate = null;       // if null do all data available for contractor
     private Calendar fromDatePeriod = null;
     private Calendar toDate = null;         // if null do all data available for contractor
@@ -21,7 +22,16 @@ public class RetentionCalc {
     private int periodLength = 1;       // default is a period of 1 week
     private int minSessionsForRetained = 2; // number of sessions
     private int calculatedPeriods = 0;   // needs to calculate to at least 1 period
-    private ArrayList<Period> periods = new ArrayList<>(); // the list of periods
+    private ArrayList<Period> periods; // the list of periods
+    private String DATE_PATTERN = "yyyy-MM-dd";
+    private int maxCount = 10;
+
+
+    private String contractorName;
+
+
+
+    private boolean couplesDelete = false; // deletes couples from retention
 
 
 
@@ -32,7 +42,10 @@ public class RetentionCalc {
     public RetentionCalc(Contractor contractor) {
         todayDate = Calendar.getInstance();
         fullClientList = contractor.getClientList();
+        contractorName = contractor.getContractorName();
     }
+
+
 
 
     /**
@@ -99,18 +112,126 @@ public class RetentionCalc {
     }
 
 
-
-
     /**
      * this function creates the arrayList of periods
      */
     private void createPeriods() {
-        //TODO
+        // reset the periods to a new list
+        periods = new ArrayList<>();
+
         Calendar startDayPeriod = (Calendar) fromDatePeriod.clone();
         for (int i = 0; i < calculatedPeriods; i++) {
-            periods.add(new Period(startDayPeriod, periodLength));
+
+            periods.add(new Period(startDayPeriod, periodLength, daysSinceLastSessionMax, minSessionsForRetained));
             startDayPeriod.add(Calendar.DATE,periodLength * 7);
+
+            // add the clients to the period by iterating through the valid client list
+            for (int j = 0; j < validClients.size(); j++) {
+                // compares the start and end date of the new period to the earliestDate of the client
+                // if it falls between the two dates it adds the client to the period
+                if (periods.get(i).getPeriodStartDate().compareTo(validClients.get(j).getEarliestDate()) < 0
+                    && periods.get(i).getPeriodEndDate().compareTo(validClients.get(j).getEarliestDate()) > 0) {
+
+                    // add the validClient to the period
+                    periods.get(i).addClient(validClients.get(j));
+                }
+            }
+
         }
+    }
+
+    public ArrayList<Integer> getRetentionDistribution(String type) {
+        ArrayList<Integer> distributionCount = new ArrayList<>();
+        ArrayList<Integer> distributionRelativePercentage = new ArrayList<>();
+
+        // prefill array with 0's
+        for (int i = 0; i < maxCount+1; i++) {
+            distributionCount.add(0);
+
+        }
+        // iterate through each client to determine the distribution of attended sessions
+        // position 0 is never used
+
+
+        for (int i = 0; i < validClients.size(); i++) {
+            int attendedClients = validClients.get(i).getAttendedSessions();
+
+            // increment the place in the distribution array by 1 that correlates by attended sessions
+            if (attendedClients >= maxCount) {
+                int currentCount = distributionCount.get(maxCount);
+                currentCount++;
+                distributionCount.set(maxCount,currentCount);
+
+            } else {
+                int currentCount = distributionCount.get(attendedClients);
+                currentCount++;
+                distributionCount.set(attendedClients,currentCount);
+            }
+
+        }
+        if (type.equals("COUNT")) {
+            return distributionCount;
+        }
+
+        // calculate the relative distribution
+        int totalClients = validClients.size();
+
+        // iterate through the distributionCount and add the relative distribution to distributionRelativePercentage
+        distributionRelativePercentage.add(0);
+        for (int i = 1; i < maxCount+1; i++) {
+            int percentage = 100 * distributionCount.get(i) / totalClients;
+            distributionRelativePercentage.add(percentage);
+
+        }
+
+
+        return distributionRelativePercentage;
+    }
+
+    public ArrayList<Integer> getPeriodPercentages() {
+        ArrayList<Integer> percentageList = new ArrayList<>();
+
+
+        for (int i = 0; i < periods.size(); i++) {
+            percentageList.add(periods.get(i).getRetainedPercentage());
+        }
+
+        return percentageList;
+    }
+
+    public ArrayList<Integer> getNewClientsArray() {
+        ArrayList<Integer> newClientArray = new ArrayList<>();
+
+
+        for (int i = 0; i < periods.size(); i++) {
+            newClientArray.add(periods.get(i).getNewClients());
+        }
+
+        return newClientArray;
+    }
+
+    public ArrayList<Integer> getRetainedClientsArray() {
+        ArrayList<Integer> retainedClientArray = new ArrayList<>();
+
+
+        for (int i = 0; i < periods.size(); i++) {
+            retainedClientArray.add(periods.get(i).getRetainedClients());
+        }
+
+        return retainedClientArray;
+    }
+
+
+
+    public ArrayList<String> getPeriodStartDaysString() {
+        ArrayList<String> dateList = new ArrayList<>();
+        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_PATTERN);
+
+        for (int i = 0; i < periods.size(); i++) {
+            dateList.add(dateFormat.format(periods.get(i).getPeriodStartDate().getTime()));
+        }
+
+        return dateList;
     }
 
 
@@ -161,7 +282,6 @@ public class RetentionCalc {
     private String processValidClients() {
 
         validClients = new ArrayList<>();
-
         int tempClientListSize = fullClientList.size();
 
         Client client;
@@ -184,13 +304,16 @@ public class RetentionCalc {
                 continue;
             }
 
+            // skips over couples if enabled
+            if (couplesDelete) {
+                if (client.getIsCouple()){
+                    continue;
+                }
+            }
+
             validClients.add(client);
-
         }
-
         return null;
-
-
     }
 
 
@@ -227,6 +350,9 @@ public class RetentionCalc {
     void setDaysSinceLastSessionMax(int daysSinceLastSessionMax) {
         this.daysSinceLastSessionMax = daysSinceLastSessionMax;
     }
+    public void setMinSessionsForRetained(int minSessionsForRetained) {
+        this.minSessionsForRetained = minSessionsForRetained;
+    }
 
     public int getCalculatedPeriods() {
         return calculatedPeriods;
@@ -242,11 +368,15 @@ public class RetentionCalc {
 
     public ArrayList<Period> getPeriods(){return  periods;}
 
+    public void setCouplesDelete(boolean couplesDelete) {
+        this.couplesDelete = couplesDelete;
+    }
 
+    public void setMaxCount (int maxCount) { this.maxCount = maxCount;}
 
-
-
-
+    public String getContractorName() {
+        return contractorName;
+    }
 
 
 }

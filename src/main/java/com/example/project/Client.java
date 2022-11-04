@@ -17,6 +17,7 @@ public class Client {
     private int cancelledFutureSession = 0;
     private int lateCancel = 0;
     private int noShow = 0;
+    private boolean isCouple = false;
     //SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd MMM HH:mm");
 
     // TODO calc last attended date
@@ -79,7 +80,10 @@ public class Client {
                 attendedSessions++;
             }
 
-
+            // flags this if it is a couple
+            if (clientSession.getServiceType().equals("Couple")) {
+                isCouple = true;
+            }
 
         } else {
             // adds to the other charge list
@@ -130,10 +134,14 @@ public class Client {
     }
 
     public Calendar getEarliestDate() {
-        return earliestDate;
+        return (Calendar) earliestDate.clone();
     }
 
     public Calendar getLatestDate() {
-        return latestDate;
+        return (Calendar) latestDate.clone();
+    }
+
+    public boolean getIsCouple() {
+        return isCouple;
     }
 }
