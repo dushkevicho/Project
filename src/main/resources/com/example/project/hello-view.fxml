@@ -5,7 +5,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.project.HelloController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1000.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.project.HelloController">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
@@ -91,7 +91,7 @@
                   <Insets left="5.0" top="2.0" />
                </VBox.margin>
             </Spinner>
-            <Label text="Retention Distribution">
+            <Label fx:id="retentionDistributionLabel" text="Retention Distribution">
                <VBox.margin>
                   <Insets left="5.0" top="5.0" />
                </VBox.margin>
@@ -101,7 +101,7 @@
                   <Insets left="5.0" top="2.0" />
                </VBox.margin>
             </Spinner>
-            <CheckBox fx:id="couplesDeleteCheckBox" mnemonicParsing="false" text="Couples Delete">
+            <CheckBox fx:id="couplesDeleteCheckBox" mnemonicParsing="false" text="CONFIDENTIAL OPTION">
                <VBox.margin>
                   <Insets left="5.0" top="5.0" />
                </VBox.margin>
@@ -121,19 +121,13 @@
                   <Insets left="5.0" right="5.0" top="5.0" />
                </VBox.margin>
             </Button>
-            <Separator fx:id="settingsSeparator" prefWidth="200.0">
+            <Label fx:id="includeKeywordsLabel" text="IncluIe Keywords:">
                <VBox.margin>
-                  <Insets top="5.0" />
-               </VBox.margin>
-            </Separator>
-            <Label text="Total New Clients" />
-            <Label text="Label" />
-            <Label text="Label" />
-            <Label fx:id="payrollSettingsTextBox" text="Payroll Settings">
-               <VBox.margin>
-                  <Insets left="5.0" />
-               </VBox.margin>
-            </Label>
+                  <Insets left="5.0" top="5.0" />
+               </VBox.margin></Label>
+            <TextArea fx:id="IncludeTextArea" prefHeight="200.0" prefWidth="200.0" promptText="use &quot;;&quot; to break up keywords" />
+            <Label fx:id="excludeKeywordsLabel" text="Exclude Keywords:" />
+            <TextArea fx:id="ExcludeTextArea" prefHeight="200.0" prefWidth="200.0" promptText="use &quot;;&quot; to break up keywords" />
          </children>
          <BorderPane.margin>
             <Insets left="5.0" right="5.0" top="10.0" />

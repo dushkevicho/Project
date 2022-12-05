@@ -18,13 +18,13 @@ import java.util.Date;
 import java.util.ResourceBundle;
 
 public class HelloController implements Initializable {
-    @FXML private Label fileName, payrollSettingsTextBox, retentionSettingsTextBox, spinnerLabel, RetentionWeeksLabel;
-    @FXML private Label SelectedContractors, minimumSessionsLabel;
+    @FXML private Label fileName, retentionSettingsTextBox, spinnerLabel, RetentionWeeksLabel;
+    @FXML private Label SelectedContractors, minimumSessionsLabel, retentionDistributionLabel, includeKeywordsLabel, excludeKeywordsLabel;
     @FXML private DatePicker retentionFromDateDatePicker, retentionToDateDatePicker;
     @FXML private ComboBox retentionContractorNamesComboBox;
     @FXML private MenuItem openFileMenuItem, closeFileMenuItem;
     @FXML private Button calculateRetentionButton, addButton, clearButton;
-    @FXML private Separator settingsSeparator;
+    @FXML private TextArea IncludeTextArea,ExcludeTextArea;
     @FXML private Spinner retentionDaysSinceLastDaySpinner, retentionWeeksPeriodSpinner, MinSessionSpinner, maxDistributionSpinner;
     @FXML private LineChart<String, Number> retentionChart;
     @FXML private CheckBox couplesDeleteCheckBox,calculateAtrittionCheckBox, clinicAverageCheckBox;
@@ -517,11 +517,9 @@ public class HelloController implements Initializable {
         retentionFromDateDatePicker.setDisable(false);
         retentionToDateDatePicker.setDisable(false);
         retentionContractorNamesComboBox.setDisable(false);
-        payrollSettingsTextBox.setDisable(false);
         retentionSettingsTextBox.setDisable(false);
         retentionSettingsTextBox.setDisable(false);
         calculateRetentionButton.setDisable(false);
-        settingsSeparator.setDisable(false);
         retentionDaysSinceLastDaySpinner.setDisable(false);
         spinnerLabel.setDisable(false);
         retentionWeeksPeriodSpinner.setDisable(false);
@@ -536,17 +534,19 @@ public class HelloController implements Initializable {
         clientRetentionDistributionBarChart.setDisable(false);
         maxDistributionSpinner.setDisable(false);
         clinicAverageCheckBox.setDisable(false);
+        retentionDistributionLabel.setDisable(false);
+        includeKeywordsLabel.setDisable(true);
+        excludeKeywordsLabel.setDisable(true);
+        IncludeTextArea.setDisable(true);
+        ExcludeTextArea.setDisable(true);
 
 
         retentionFromDateDatePicker.setOpacity(1);
         retentionToDateDatePicker.setOpacity(1);
         retentionContractorNamesComboBox.setOpacity(1);
-        payrollSettingsTextBox.setOpacity(1);
         retentionSettingsTextBox.setOpacity(1);
-
         retentionSettingsTextBox.setOpacity(1);
         calculateRetentionButton.setOpacity(1);
-        settingsSeparator.setOpacity(1);
         retentionDaysSinceLastDaySpinner.setOpacity(1);
         spinnerLabel.setOpacity(1);
         retentionWeeksPeriodSpinner.setOpacity(1);
@@ -561,6 +561,11 @@ public class HelloController implements Initializable {
         clientRetentionDistributionBarChart.setOpacity(1);
         maxDistributionSpinner.setOpacity(1);
         clinicAverageCheckBox.setOpacity(1);
+        retentionDistributionLabel.setOpacity(1);
+        includeKeywordsLabel.setOpacity(0);
+        excludeKeywordsLabel.setOpacity(0);
+        IncludeTextArea.setOpacity(0);
+        ExcludeTextArea.setOpacity(0);
 
 
         String[] contractorNamesList = allClientSessions.contractorList();
@@ -587,12 +592,9 @@ public class HelloController implements Initializable {
         retentionFromDateDatePicker.setDisable(true);
         retentionToDateDatePicker.setDisable(true);
         retentionContractorNamesComboBox.setDisable(true);
-        payrollSettingsTextBox.setDisable(true);
         retentionSettingsTextBox.setDisable(true);
-
         retentionSettingsTextBox.setDisable(true);
         calculateRetentionButton.setDisable(true);
-        settingsSeparator.setDisable(true);
         retentionDaysSinceLastDaySpinner.setDisable(true);
         spinnerLabel.setDisable(true);
         retentionWeeksPeriodSpinner.setDisable(true);
@@ -607,17 +609,19 @@ public class HelloController implements Initializable {
         clientRetentionDistributionBarChart.setDisable(true);
         maxDistributionSpinner.setDisable(true);
         clinicAverageCheckBox.setDisable(true);
+        retentionDistributionLabel.setDisable(true);
+        includeKeywordsLabel.setDisable(true);
+        excludeKeywordsLabel.setDisable(true);
+        IncludeTextArea.setDisable(true);
+        ExcludeTextArea.setDisable(true);
 
 
         retentionFromDateDatePicker.setOpacity(0);
         retentionToDateDatePicker.setOpacity(0);
         retentionContractorNamesComboBox.setOpacity(0);
-        payrollSettingsTextBox.setOpacity(0);
         retentionSettingsTextBox.setOpacity(0);
-
         retentionSettingsTextBox.setOpacity(0);
         calculateRetentionButton.setOpacity(0);
-        settingsSeparator.setOpacity(0);
         retentionDaysSinceLastDaySpinner.setOpacity(0);
         spinnerLabel.setOpacity(0);
         retentionWeeksPeriodSpinner.setOpacity(0);
@@ -632,6 +636,11 @@ public class HelloController implements Initializable {
         clientRetentionDistributionBarChart.setOpacity(0);
         maxDistributionSpinner.setOpacity(0);
         clinicAverageCheckBox.setOpacity(0);
+        retentionDistributionLabel.setOpacity(0);
+        includeKeywordsLabel.setOpacity(0);
+        excludeKeywordsLabel.setOpacity(0);
+        IncludeTextArea.setOpacity(0);
+        ExcludeTextArea.setOpacity(0);
 
         maxDistributionSpinner.setValueFactory(maxDistributionValueFactory);
         retentionDaysSinceLastDaySpinner.setValueFactory(daySpinnerValueFactory);
